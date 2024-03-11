@@ -1,4 +1,4 @@
-namespace C_C_Project_2024.Models
+namespace C_C_Proj_WebStore.Models
 {
     public class ErrorViewModel
     {

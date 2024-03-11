@@ -1,9 +1,10 @@
-using C_C_Project_2024.Models;
+using C_C_Proj_WebStore.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace C_C_Project_2024.Controllers
+namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
