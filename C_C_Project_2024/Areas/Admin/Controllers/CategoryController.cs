@@ -1,11 +1,14 @@
 ﻿using C_C_Proj_WebStore.DataAccess.Data;
 using C_C_Proj_WebStore.DataAccess.Repository.IRepository;
 using C_C_Proj_WebStore.Models;
+using C_C_Proj_WebStore.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace C_C_Proj_WebStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
