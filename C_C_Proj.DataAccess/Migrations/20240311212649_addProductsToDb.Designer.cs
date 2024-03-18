@@ -3,6 +3,7 @@ using C_C_Proj_WebStore.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C_C_Proj_WebStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240311212649_addProductsToDb")]
+    partial class addProductsToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,9 +77,6 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -86,10 +86,6 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -105,8 +101,6 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.ToTable("Products");
 
                     b.HasData(
@@ -114,11 +108,9 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 1,
                             Brand = "Nike",
-                            CategoryId = 1,
                             Color = "White",
                             Description = "Description1",
                             Gender = "M",
-                            ImageUrl = "",
                             Model = "Pegasus",
                             Price = 100.0,
                             Size = 41.5
@@ -127,11 +119,9 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 2,
                             Brand = "Adidas",
-                            CategoryId = 2,
                             Color = "Black",
                             Description = "Description2",
                             Gender = "M",
-                            ImageUrl = "",
                             Model = "Easy",
                             Price = 120.0,
                             Size = 45.5
@@ -140,26 +130,13 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 3,
                             Brand = "Reebock",
-                            CategoryId = 4,
                             Color = "Blue",
                             Description = "Description3",
                             Gender = "F",
-                            ImageUrl = "",
                             Model = "Wild Horse",
                             Price = 200.0,
                             Size = 38.0
                         });
-                });
-
-            modelBuilder.Entity("C_C_Proj_WebStore.Models.Product", b =>
-                {
-                    b.HasOne("C_C_Proj_WebStore.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
