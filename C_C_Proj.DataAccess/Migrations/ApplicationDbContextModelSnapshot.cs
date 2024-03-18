@@ -63,6 +63,9 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         });
                 });
 
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.Product", b =>
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -91,12 +94,105 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Size")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Brand = "Nike",
+                            CategoryId = 1,
+                            Color = "White",
+                            Description = "Description1",
+                            Gender = "M",
+                            ImageUrl = "",
+                            Model = "Pegasus",
+                            Price = 100.0,
+                            Size = 41.5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Brand = "Adidas",
+                            CategoryId = 2,
+                            Color = "Black",
+                            Description = "Description2",
+                            Gender = "M",
+                            ImageUrl = "",
+                            Model = "Easy",
+                            Price = 120.0,
+                            Size = 45.5
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Brand = "Reebock",
+                            CategoryId = 4,
+                            Color = "Blue",
+                            Description = "Description3",
+                            Gender = "F",
+                            ImageUrl = "",
+                            Model = "Wild Horse",
+                            Price = 200.0,
+                            Size = 38.0
+                        });
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.Product", b =>
+                {
+                    b.HasOne("C_C_Proj_WebStore.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -342,6 +438,7 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
                 });
 #pragma warning restore 612, 618
         }
