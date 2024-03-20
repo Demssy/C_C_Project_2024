@@ -74,7 +74,7 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Size = 38,
                 Color = "Blue",
                 Gender = "F",
-                CategoryId = 4,
+                CategoryId = 3,
                 ImageUrl = ""
             }
             );
