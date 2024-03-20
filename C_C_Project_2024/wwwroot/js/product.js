@@ -11,9 +11,9 @@ function loadDataTable() {
 
         columns: [
             { data: 'brand', "width": "20%" },
-            { data: 'model', "width": "20%" },
+            { data: 'shoeModel', "width": "20%" },
             { data: 'size', "width": "5%" },
-            { data: 'price', "width": "5%" },
+            { data: 'listPrice', "width": "5%" },
             { data: 'category.name', "width": "15%" },
             { data: 'gender', "width": "5%" },
             { data: 'color', "width": "10%" },

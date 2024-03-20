@@ -4,6 +4,7 @@ using C_C_Proj_WebStore.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C_C_Proj_WebStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240318180514_editProductTable")]
+    partial class editProductTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,6 +100,10 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Property<double>("ListPrice")
                         .HasColumnType("float");
 
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -105,10 +112,6 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
 
                     b.Property<double>("Price50")
                         .HasColumnType("float");
-
-                    b.Property<string>("ShoeModel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Size")
                         .HasColumnType("float");
@@ -130,10 +133,10 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             Gender = "M",
                             ImageUrl = "",
                             ListPrice = 100.0,
+                            Model = "Pegasus",
                             Price = 95.0,
                             Price100 = 80.0,
                             Price50 = 90.0,
-                            ShoeModel = "Pegasus",
                             Size = 41.5
                         },
                         new
@@ -146,10 +149,10 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             Gender = "M",
                             ImageUrl = "",
                             ListPrice = 100.0,
+                            Model = "Easy",
                             Price = 95.0,
                             Price100 = 80.0,
                             Price50 = 90.0,
-                            ShoeModel = "Easy",
                             Size = 45.5
                         },
                         new
@@ -162,10 +165,10 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             Gender = "F",
                             ImageUrl = "",
                             ListPrice = 100.0,
+                            Model = "Wild Horse",
                             Price = 95.0,
                             Price100 = 80.0,
                             Price50 = 90.0,
-                            ShoeModel = "Wild Horse",
                             Size = 38.0
                         });
                 });
@@ -195,7 +198,7 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-                }));
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {

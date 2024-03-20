@@ -17,15 +17,27 @@ namespace C_C_Proj_WebStore.Models
 
         [Required]
         [DisplayName("Shoe Model")]
-        public string Model { get; set; }
+        public string? ShoeModel { get; set; }
 
         [Required]
         [DisplayName("Shoe Brand")]
-        public string Brand { get; set; }
+        public string? Brand { get; set; }
 
         [Required]
-        [DisplayName("Shoe Price")]
+        [DisplayName("List Price")]
+        public double ListPrice { get; set; }
+
+        [Required]
+        [DisplayName("Price for 1-50")]
         public double Price { get; set; }
+
+        [Required]
+        [DisplayName("Price for 50+")]
+        public double Price50 { get; set; }
+
+        [Required]
+        [DisplayName("Price for 100+")]
+        public double Price100 { get; set; }
 
         [Required]
         [DisplayName("Shoe Description")]
