@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C_C_Proj_WebStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240318182656_editProductTable#2")]
-    partial class editProductTable2
+    [Migration("20240320133820_resetDB")]
+    partial class resetDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,7 +159,7 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 3,
                             Brand = "Reebock",
-                            CategoryId = 4,
+                            CategoryId = 3,
                             Color = "Blue",
                             Description = "Description3",
                             Gender = "F",

@@ -156,7 +156,7 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 3,
                             Brand = "Reebock",
-                            CategoryId = 4,
+                            CategoryId = 3,
                             Color = "Blue",
                             Description = "Description3",
                             Gender = "F",
