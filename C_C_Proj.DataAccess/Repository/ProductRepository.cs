@@ -27,12 +27,15 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
                 {
                     objFromDb.ImageUrl = product.ImageUrl;
                 }
-                objFromDb.Model = product.Model;
+                objFromDb.ShoeModel = product.ShoeModel;
                 objFromDb.Brand = product.Brand;
                 objFromDb.Price = product.Price;
                 objFromDb.Description = product.Description;
                 objFromDb.Size = product.Size;
                 objFromDb.Color = product.Color;
+                objFromDb.ListPrice = product.ListPrice;
+                objFromDb.Price50 = product.Price50;
+                objFromDb.Price100 = product.Price100;
             }
         }
     }

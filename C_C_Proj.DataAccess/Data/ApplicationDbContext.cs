@@ -1,11 +1,13 @@
 ﻿
 using C_C_Proj_WebStore.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace C_C_Proj_WebStore.DataAccess.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -13,6 +15,7 @@ namespace C_C_Proj_WebStore.DataAccess.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers {  get; set; }
 
         public DbSet<Product> Products { get; set; }
 
@@ -29,9 +32,12 @@ namespace C_C_Proj_WebStore.DataAccess.Data
             new Product
             {
                 Id = 1,
-                Model = "Pegasus",
+                ShoeModel = "Pegasus",
                 Brand = "Nike",
-                Price = 100,
+                ListPrice = 100,
+                Price = 95,
+                Price50 = 90,
+                Price100 = 80,
                 Description = "Description1",
                 Size = 41.5,
                 Color = "White",
@@ -42,9 +48,12 @@ namespace C_C_Proj_WebStore.DataAccess.Data
             new Product
             {
                 Id = 2,
-                Model = "Easy",
+                ShoeModel = "Easy",
                 Brand = "Adidas",
-                Price = 120,
+                ListPrice = 100,
+                Price = 95,
+                Price50 = 90,
+                Price100 = 80,
                 Description = "Description2",
                 Size = 45.5,
                 Color = "Black",
@@ -55,9 +64,12 @@ namespace C_C_Proj_WebStore.DataAccess.Data
             new Product
             {
                 Id = 3,
-                Model = "Wild Horse",
+                ShoeModel = "Wild Horse",
                 Brand = "Reebock",
-                Price = 200,
+                ListPrice = 100,
+                Price = 95,
+                Price50 = 90,
+                Price100 = 80,
                 Description = "Description3",
                 Size = 38,
                 Color = "Blue",
