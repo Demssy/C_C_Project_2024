@@ -16,8 +16,11 @@ namespace C_C_Proj_WebStore.DataAccess.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers {  get; set; }
-
+        public DbSet<ShoppingCard> ShoppingCards { get; set; }
+        public DbSet<Company> Companies { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<OrderHeader> OrderHeaders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +29,43 @@ namespace C_C_Proj_WebStore.DataAccess.Data
             new Category { Id = 1, Name = "Run", DisplayOrder = 1 },
             new Category { Id = 2, Name = "Chill", DisplayOrder = 2 },
             new Category { Id = 3, Name = "New", DisplayOrder = 3 }
+            );
+
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                Id = 1,
+                Name = "Nike",
+                StreetAddress = "123 Main St",
+                City = "New York",
+                Country = "USA",
+                PostalCode = "10001",
+                PhoneNumber = "1234567890",
+                Email = "nike.com"
+                },
+                new Company
+                {
+                    Id = 2,
+                    Name = "Adidas",
+                    StreetAddress = "456 Main St",
+                    City = "Berlin",
+                    Country = "Germany",
+                    PostalCode = "10001123",
+                    PhoneNumber = "23451324",
+                    Email = "abibas.com"
+                },
+                new Company
+                {
+                    Id = 3,
+                    Name = "Boss",
+                    StreetAddress = "789 Main St",
+                    City = "Milan",
+                    Country = "Itali",
+                    PostalCode = "5671123",
+                    PhoneNumber = "29999222224",
+                    Email = "biboss.com"
+                }
+
             );
 
             modelBuilder.Entity<Product>().HasData(

@@ -7,6 +7,7 @@
     <title>@ViewData["Title"] - C_C_Proj_WebStore_WebStore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/CustomEdit.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/C_C_Proj_WebStore.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
@@ -40,10 +41,16 @@
                                     <li class="nav-item">
                                         <a class="dropdown-item text-white " asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item text-white " asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
+                                    </li>
                                     <li><hr class="dropdown-divider"></li>
                                 </ul>
                             </li>
-                        }                     
+                        }    
+                        <li class="nav-item">
+                            <a class="nav-link " asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-cart"></i> &nbsp; </a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial"/>
                 </div>

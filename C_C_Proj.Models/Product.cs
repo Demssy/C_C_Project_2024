@@ -17,11 +17,11 @@ namespace C_C_Proj_WebStore.Models
 
         [Required]
         [DisplayName("Shoe Model")]
-        public string? ShoeModel { get; set; }
+        public string ShoeModel { get; set; }
 
         [Required]
         [DisplayName("Shoe Brand")]
-        public string? Brand { get; set; }
+        public string Brand { get; set; }
 
         [Required]
         [DisplayName("List Price")]

@@ -36,6 +36,7 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
                 objFromDb.ListPrice = product.ListPrice;
                 objFromDb.Price50 = product.Price50;
                 objFromDb.Price100 = product.Price100;
+                
             }
         }
     }

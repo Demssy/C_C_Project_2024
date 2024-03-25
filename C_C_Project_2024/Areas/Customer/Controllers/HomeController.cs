@@ -1,7 +1,9 @@
 using C_C_Proj_WebStore.DataAccess.Repository.IRepository;
 using C_C_Proj_WebStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 {
@@ -25,8 +27,36 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
         public IActionResult Details(int id)
         {
-            Product product = _unitOfWork.Product.Get(u=>u.Id == id, includeProperties: "Category");
-            return View(product);
+            ShoppingCard shoppingCard = new()
+            {
+                Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category"),
+                ProductId = id,
+                Count = 1
+            };
+            return View(shoppingCard);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCard shoppingCard)
+        {
+            shoppingCard.Id = 0;
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCard.ApplicationUserId = claim;
+            ShoppingCard cardFromDb = _unitOfWork.ShoppingCard.Get(u => u.ApplicationUserId == claim && u.ProductId == shoppingCard.ProductId);
+            if (cardFromDb == null)
+            {
+                _unitOfWork.ShoppingCard.Add(shoppingCard);
+            }
+            else
+            {
+                cardFromDb.Count += shoppingCard.Count;
+                _unitOfWork.ShoppingCard.Update(cardFromDb);
+            }
+            TempData["Success"] = "Item added to cart successfully";
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()

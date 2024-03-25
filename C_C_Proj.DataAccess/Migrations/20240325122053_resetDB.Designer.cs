@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C_C_Proj_WebStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240320133820_resetDB")]
+    [Migration("20240325122053_resetDB")]
     partial class resetDB
     {
         /// <inheritdoc />
@@ -63,6 +63,76 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             Id = 3,
                             DisplayOrder = 3,
                             Name = "New"
+                        });
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreetAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "New York",
+                            Country = "USA",
+                            Email = "nike.com",
+                            Name = "Nike",
+                            PhoneNumber = "1234567890",
+                            PostalCode = "10001",
+                            StreetAddress = "123 Main St"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            City = "Berlin",
+                            Country = "Germany",
+                            Email = "abibas.com",
+                            Name = "Adidas",
+                            PhoneNumber = "23451324",
+                            PostalCode = "10001123",
+                            StreetAddress = "456 Main St"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            City = "Milan",
+                            Country = "Itali",
+                            Email = "biboss.com",
+                            Name = "Boss",
+                            PhoneNumber = "29999222224",
+                            PostalCode = "5671123",
+                            StreetAddress = "789 Main St"
                         });
                 });
 
@@ -171,6 +241,32 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             ShoeModel = "Wild Horse",
                             Size = 38.0
                         });
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.ShoppingCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ShoppingCards");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -387,6 +483,9 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -400,6 +499,8 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Property<string>("StreetAdress")
                         .HasColumnType("nvarchar(max)");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
@@ -412,6 +513,23 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.ShoppingCard", b =>
+                {
+                    b.HasOne("C_C_Proj_WebStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("C_C_Proj_WebStore.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -463,6 +581,15 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("C_C_Proj_WebStore.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }
