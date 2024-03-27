@@ -118,12 +118,12 @@ namespace C_C_Proj_WebStore.Areas.Identity.Pages.Account
 
             [Required]
             public string Name {  get; set; }
-            public string StreetAddress {  get; set; }
-            public string City { get; set; }
-            public string State { get; set; }
-            public string PostalCode { get; set; }
-            public string PhoneNumber { get; set; }
-            public int CompanyId { get; set; }
+            public string? StreetAddress {  get; set; }
+            public string? City { get; set; }
+            public string? Country { get; set; }
+            public string? PostalCode { get; set; }
+            public string? PhoneNumber { get; set; }
+            public int? CompanyId { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> CompanyList { get; set; }
         }
@@ -171,7 +171,7 @@ namespace C_C_Proj_WebStore.Areas.Identity.Pages.Account
                 user.StreetAdress = Input.StreetAddress;
                 user.City = Input.City;
                 user.Name = Input.Name;
-                user.State = Input.State;
+                user.State = Input.Country;
                 user.PhoneNumber = Input.PhoneNumber;
                 user.PostalAdress = Input.PostalCode;
 
@@ -213,7 +213,15 @@ namespace C_C_Proj_WebStore.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if (User.IsInRole(SD.Role_Admin))
+                        {
+                            TempData["success"] = "New user created successfully";
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
+                        
                         return LocalRedirect(returnUrl);
                     }
                 }

@@ -1,5 +1,6 @@
 using C_C_Proj_WebStore.DataAccess.Repository.IRepository;
 using C_C_Proj_WebStore.Models;
+using C_C_Proj_WebStore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -42,20 +43,23 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
             shoppingCard.Id = 0;
             var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            shoppingCard.ApplicationUserId = claim;
-            ShoppingCard cardFromDb = _unitOfWork.ShoppingCard.Get(u => u.ApplicationUserId == claim && u.ProductId == shoppingCard.ProductId);
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCard.ApplicationUserId = userId;
+            ShoppingCard cardFromDb = _unitOfWork.ShoppingCard.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCard.ProductId);
             if (cardFromDb == null)
             {
                 _unitOfWork.ShoppingCard.Add(shoppingCard);
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == userId).Count());
             }
             else
             {
                 cardFromDb.Count += shoppingCard.Count;
                 _unitOfWork.ShoppingCard.Update(cardFromDb);
+                _unitOfWork.Save();
             }
             TempData["Success"] = "Item added to cart successfully";
-            _unitOfWork.Save();
+            
             return RedirectToAction(nameof(Index));
         }
 
