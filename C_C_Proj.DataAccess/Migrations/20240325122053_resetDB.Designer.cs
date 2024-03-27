@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C_C_Proj_WebStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240312234649_ExtendIdentityUser")]
-    partial class ExtendIdentityUser
+    [Migration("20240325122053_resetDB")]
+    partial class resetDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,209 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             DisplayOrder = 3,
                             Name = "New"
                         });
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StreetAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            City = "New York",
+                            Country = "USA",
+                            Email = "nike.com",
+                            Name = "Nike",
+                            PhoneNumber = "1234567890",
+                            PostalCode = "10001",
+                            StreetAddress = "123 Main St"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            City = "Berlin",
+                            Country = "Germany",
+                            Email = "abibas.com",
+                            Name = "Adidas",
+                            PhoneNumber = "23451324",
+                            PostalCode = "10001123",
+                            StreetAddress = "456 Main St"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            City = "Milan",
+                            Country = "Itali",
+                            Email = "biboss.com",
+                            Name = "Boss",
+                            PhoneNumber = "29999222224",
+                            PostalCode = "5671123",
+                            StreetAddress = "789 Main St"
+                        });
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ListPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Price100")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Price50")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ShoeModel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Size")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Brand = "Nike",
+                            CategoryId = 1,
+                            Color = "White",
+                            Description = "Description1",
+                            Gender = "M",
+                            ImageUrl = "",
+                            ListPrice = 100.0,
+                            Price = 95.0,
+                            Price100 = 80.0,
+                            Price50 = 90.0,
+                            ShoeModel = "Pegasus",
+                            Size = 41.5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Brand = "Adidas",
+                            CategoryId = 2,
+                            Color = "Black",
+                            Description = "Description2",
+                            Gender = "M",
+                            ImageUrl = "",
+                            ListPrice = 100.0,
+                            Price = 95.0,
+                            Price100 = 80.0,
+                            Price50 = 90.0,
+                            ShoeModel = "Easy",
+                            Size = 45.5
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Brand = "Reebock",
+                            CategoryId = 3,
+                            Color = "Blue",
+                            Description = "Description3",
+                            Gender = "F",
+                            ImageUrl = "",
+                            ListPrice = 100.0,
+                            Price = 95.0,
+                            Price100 = 80.0,
+                            Price50 = 90.0,
+                            ShoeModel = "Wild Horse",
+                            Size = 38.0
+                        });
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.ShoppingCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ShoppingCards");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -220,12 +423,10 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -262,12 +463,10 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -284,8 +483,12 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Name")
+                    b.Property<int?>("CompanyId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PostalAdress")
                         .HasColumnType("nvarchar(max)");
@@ -296,7 +499,37 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Property<string>("StreetAdress")
                         .HasColumnType("nvarchar(max)");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.Product", b =>
+                {
+                    b.HasOne("C_C_Proj_WebStore.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.ShoppingCard", b =>
+                {
+                    b.HasOne("C_C_Proj_WebStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("C_C_Proj_WebStore.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -348,6 +581,15 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("C_C_Proj_WebStore.Models.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }
