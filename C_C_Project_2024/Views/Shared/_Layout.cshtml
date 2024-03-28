@@ -20,7 +20,10 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">C_C_Proj_WebStore</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/SB_Logo.png" style="width:70px ">
+                   
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -40,9 +43,11 @@
                                     <li class="nav-item">
                                         <a class="dropdown-item text-white " asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
                                     </li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li class="nav-item">
                                         <a class="dropdown-item text-white " asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
                                     </li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li class="nav-item">
                                         <a class="dropdown-item text-white " asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
                                     </li>

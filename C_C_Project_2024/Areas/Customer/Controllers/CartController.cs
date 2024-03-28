@@ -144,7 +144,14 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
         public IActionResult OrderConfirmation(int id)
         {
+            
             OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+            if(orderHeader == null)
+            {
+                HttpContext.Session.Clear();
+                return View();
+                
+            }
             if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
             { 
                 var service = new SessionService();
