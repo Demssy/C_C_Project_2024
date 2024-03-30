@@ -4,6 +4,7 @@ using C_C_Proj_WebStore.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C_C_Proj_WebStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240329002329_removeURL")]
+    partial class removeURL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,28 +341,6 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("C_C_Proj_WebStore.Models.ProductImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductImages");
-                });
-
             modelBuilder.Entity("C_C_Proj_WebStore.Models.ShoppingCard", b =>
                 {
                     b.Property<int>("Id")
@@ -662,17 +643,6 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("C_C_Proj_WebStore.Models.ProductImage", b =>
-                {
-                    b.HasOne("C_C_Proj_WebStore.Models.Product", "Product")
-                        .WithMany("ProductImages")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("C_C_Proj_WebStore.Models.ShoppingCard", b =>
                 {
                     b.HasOne("C_C_Proj_WebStore.Models.ApplicationUser", "ApplicationUser")
@@ -748,11 +718,6 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .HasForeignKey("CompanyId");
 
                     b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("C_C_Proj_WebStore.Models.Product", b =>
-                {
-                    b.Navigation("ProductImages");
                 });
 #pragma warning restore 612, 618
         }

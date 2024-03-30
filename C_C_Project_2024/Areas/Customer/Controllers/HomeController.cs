@@ -22,7 +22,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category");
+            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
             return View(productList);
         }
 
@@ -30,7 +30,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
             ShoppingCard shoppingCard = new()
             {
-                Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category"),
+                Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category,ProductImages"),
                 ProductId = id,
                 Count = 1
             };

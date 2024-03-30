@@ -29,8 +29,12 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 ShoppingCartList = _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == claim, includeProperties: "Product"),
                 OrderHeader = new OrderHeader()
             };
+
+            IEnumerable<ProductImage> productImages = _unitOfWork.ProductImage.GetAll();
+
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
+                cart.Product.ProductImages = productImages.Where(u=>u.ProductId == cart.Product.Id).ToList();
                 cart.Price = CalculateOrderTotal(cart);
                 ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
             }

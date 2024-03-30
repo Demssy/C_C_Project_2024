@@ -23,10 +23,10 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
             var objFromDb = _db.Products.FirstOrDefault(s => s.Id == product.Id);
             if (objFromDb != null)
             {
-                if (product.ImageUrl != null)
+                /*if (product.ImageUrl != null)
                 {
                     objFromDb.ImageUrl = product.ImageUrl;
-                }
+                }*/
                 objFromDb.ShoeModel = product.ShoeModel;
                 objFromDb.Brand = product.Brand;
                 objFromDb.Price = product.Price;
@@ -36,6 +36,7 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
                 objFromDb.ListPrice = product.ListPrice;
                 objFromDb.Price50 = product.Price50;
                 objFromDb.Price100 = product.Price100;
+                objFromDb.ProductImages = product.ProductImages;
                 
             }
         }
