@@ -19,6 +19,7 @@ namespace C_C_Proj_WebStore.DataAccess.Data
         public DbSet<ShoppingCard> ShoppingCards { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
@@ -82,8 +83,8 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Size = 41.5,
                 Color = "White",
                 Gender = "M",
-                CategoryId = 1,
-                ImageUrl = ""
+                CategoryId = 1
+                
             },
             new Product
             {
@@ -98,8 +99,8 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Size = 45.5,
                 Color = "Black",
                 Gender = "M",
-                CategoryId = 2,
-                ImageUrl = ""
+                CategoryId = 2
+                
             },
             new Product
             {
@@ -114,8 +115,8 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Size = 38,
                 Color = "Blue",
                 Gender = "F",
-                CategoryId = 3,
-                ImageUrl = ""
+                CategoryId = 3
+                
             }
             );
         }

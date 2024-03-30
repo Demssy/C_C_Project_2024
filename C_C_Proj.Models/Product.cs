@@ -64,9 +64,7 @@ namespace C_C_Proj_WebStore.Models
         [ValidateNever]
         public Category Category { get; set; }
 
-        [DisplayName("Image")]
-        [Required]
         [ValidateNever]
-        public string ImageUrl { get; set; }
+        public List<ProductImage> ProductImages {  get; set; }
     }
 }
