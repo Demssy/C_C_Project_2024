@@ -10,6 +10,6 @@ namespace C_C_Proj_WebStore.DataAccess.Repository.IRepository
     public interface IApplicationUserRepository : IRepository<ApplicationUser>
     {
        
-       
+       public void Update(ApplicationUser applicationUser);
     }
 }
