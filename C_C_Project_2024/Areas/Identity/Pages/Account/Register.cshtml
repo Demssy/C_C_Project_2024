@@ -51,6 +51,11 @@
                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
+                        <select asp-for="Input.Gender" asp-items="@Model.Input.GenderList" class="form-select">
+                            <option disabled selected>-Select Gender-</option>
+                        </select>
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
                         <input asp-for="Input.StreetAddress" class="form-control" placeholder="Mizada" />
                         <label asp-for="Input.StreetAddress" class="ms-2 text-muted">Street Address</label>
                         <span asp-validation-for="Input.StreetAddress" class="text-danger"></span>
@@ -62,7 +67,7 @@
                     </div>
                     <div class="form-floating mb-3 col-md-6">
                         <input asp-for="Input.Country" class="form-control" placeholder="Beer-Sheva" />
-                        <label asp-for="Input.Country" class="ms-2 text-muted">State</label>
+                        <label asp-for="Input.Country" class="ms-2 text-muted">Country</label>
                         <span asp-validation-for="Input.Country" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-3 col-md-6">

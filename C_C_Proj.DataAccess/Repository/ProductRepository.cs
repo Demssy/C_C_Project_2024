@@ -37,6 +37,9 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
                 objFromDb.Price50 = product.Price50;
                 objFromDb.Price100 = product.Price100;
                 objFromDb.ProductImages = product.ProductImages;
+                objFromDb.CategoryId = product.CategoryId;
+                objFromDb.Gender = product.Gender;
+                objFromDb.AgeGroup = product.AgeGroup;
                 
             }
         }

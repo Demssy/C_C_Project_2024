@@ -26,6 +26,25 @@
                             <span asp-validation-for="Product.Brand" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
+                            <input asp-for="Product.StockCount" class="form-control border-0 shadow text-white" />
+                            <label asp-for="Product.StockCount" class="ms-2 text-white"></label>
+                            <span asp-validation-for="Product.StockCount" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="Product.AgeGroup" asp-items="@Model.AgeGroupList" class="form-select border-0 shadow text-white">
+                                <option disabled selected>--Select Age Group--</option>
+                            </select>
+                            <label asp-for="Product.AgeGroup" class="ms-2 text-white"></label>
+                            <span asp-validation-for="Product.AgeGroup" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="Product.Gender" asp-items="@Model.GenderList" class="form-select border-0 shadow text-white">
+                                <option disabled selected>--Select Gender--</option>
+                            </select>
+                            <label asp-for="Product.Gender" class="ms-2 text-white"></label>
+                            <span asp-validation-for="Product.Gender" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
                             <input asp-for="Product.ListPrice" class="form-control border-0 shadow text-white" />
                             <label asp-for="Product.ListPrice" class="ms-2 text-white"></label>
                             <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
@@ -58,11 +77,6 @@
                             <input asp-for="Product.Color" class="form-control border-0 shadow text-white" />
                             <label asp-for="Product.Color" class="ms-2 text-white"></label>
                             <span asp-validation-for="Product.Color" class="text-danger"></span>
-                        </div>
-                        <div class="form-floating py-2 col-12">
-                            <input asp-for="Product.Gender" class="form-control border-0 shadow text-white" />
-                            <label asp-for="Product.Gender" class="ms-2 text-white"></label>
-                            <span asp-validation-for="Product.Gender" class="text-danger"></span>
                         </div>
                         <div class="form-floating py-2 col-12">
                             <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow text-white">
@@ -109,7 +123,6 @@
                             </div>
                         }
                     }
-                    @*  <img src="@Model.Product.ImageUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" /> *@
                 </div>
             </div>
         </form>
@@ -122,15 +135,8 @@
     <script>
         tinymce.init({
             selector: 'textarea',
-            plugins: 'anchor autolink charmap codesample emoticons lists  table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent',
-            tinycomments_mode: 'embedded',
-            tinycomments_author: 'Author name',
-            mergetags_list: [
-                { value: 'First.Name', title: 'First Name' },
-                { value: 'Email', title: 'Email' },
-            ],
-            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+            plugins: 'anchor autolink charmap codesample emoticons lists  table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough  | align lineheight | checklist numlist bullist indent outdent',
         });
     </script>
      @{

@@ -10,13 +10,14 @@ function loadDataTable() {
         ajax: { url: '/Admin/Product/getall' },
 
         columns: [
-            { data: 'brand', "width": "20%" },
-            { data: 'shoeModel', "width": "20%" },
+            { data: 'brand', "width": "15%" },
+            { data: 'shoeModel', "width": "15%" },
             { data: 'size', "width": "5%" },
             { data: 'listPrice', "width": "5%" },
             { data: 'category.name', "width": "10%" },
             { data: 'gender', "width": "5%" },
-            { data: 'color', "width": "10%" },
+            { data: 'stockCount', "width": "5%" },
+            { data: 'ageGroup', "width": "5%" },
             {
                 data: 'id',
                 "render": function (data) {

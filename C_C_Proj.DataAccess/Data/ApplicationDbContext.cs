@@ -82,8 +82,10 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Description = "Description1",
                 Size = 41.5,
                 Color = "White",
-                Gender = "M",
-                CategoryId = 1
+                Gender = "Male",
+                CategoryId = 1,
+                AgeGroup = "Adult",
+                StockCount = 100
                 
             },
             new Product
@@ -98,8 +100,10 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Description = "Description2",
                 Size = 45.5,
                 Color = "Black",
-                Gender = "M",
-                CategoryId = 2
+                Gender = "Male",
+                CategoryId = 2,
+                AgeGroup = "Kid",
+                StockCount = 200
                 
             },
             new Product
@@ -114,8 +118,10 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Description = "Description3",
                 Size = 38,
                 Color = "Blue",
-                Gender = "F",
-                CategoryId = 3
+                Gender = "Female",
+                CategoryId = 3,
+                AgeGroup = "Adult",
+                StockCount = 300
                 
             }
             );

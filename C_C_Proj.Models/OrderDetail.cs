@@ -25,5 +25,7 @@ namespace C_C_Proj_WebStore.Models
         public Product Product { get; set; }
         public int Count { get; set; }
         public double Price { get; set; }
+
+        
     }
 }

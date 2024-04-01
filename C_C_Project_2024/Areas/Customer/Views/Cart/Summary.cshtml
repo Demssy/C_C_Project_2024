@@ -92,13 +92,14 @@
 									<li class="list-group-item d-flex justify-content-between">
 										<div>
 											<h6 class="my-0 text-white">@details.Product.ShoeModel</h6>
+											<h7 class="my-0 text-white">@details.Product.AgeGroup</h7>
 											<small class="text-muted">Quantity: @details.Count</small>
 										</div>
 										<span class="text-muted">@((details.Price * details.Count).ToString("c"))</span>
 									</li>
 								}
 								<li class="list-group-item d-flex justify-content-between bg-light">
-									<small class="text-info">Total (USD)</small>
+									<small class="text-info">Total (ILS)</small>
 									<strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
 								</li>
 							</ul>

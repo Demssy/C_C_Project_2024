@@ -24,6 +24,14 @@ namespace C_C_Proj_WebStore.Models
         public string Brand { get; set; }
 
         [Required]
+        [DisplayName("Age Group")]
+        public string AgeGroup { get; set; }
+
+        [Required]
+        [DisplayName("Stock Count")]
+        public int StockCount { get; set; }
+
+        [Required]
         [DisplayName("List Price")]
         public double ListPrice { get; set; }
 

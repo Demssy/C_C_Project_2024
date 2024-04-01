@@ -48,12 +48,17 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             ShoppingCard cardFromDb = _unitOfWork.ShoppingCard.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCard.ProductId);
             if (cardFromDb == null)
             {
+                
                 _unitOfWork.ShoppingCard.Add(shoppingCard);
+                shoppingCard.Product = _unitOfWork.Product.Get(u => u.Id == shoppingCard.ProductId, includeProperties: "Category,ProductImages");
+                shoppingCard.Product.StockCount -= shoppingCard.Count;
                 _unitOfWork.Save();
                 HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == userId).Count());
             }
             else
             {
+                cardFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cardFromDb.ProductId, includeProperties: "Category,ProductImages");
+                cardFromDb.Product.StockCount -= shoppingCard.Count;
                 cardFromDb.Count += shoppingCard.Count;
                 _unitOfWork.ShoppingCard.Update(cardFromDb);
                 _unitOfWork.Save();

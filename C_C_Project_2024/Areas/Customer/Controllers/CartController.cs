@@ -139,6 +139,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 				var service = new SessionService();
 				Session session = service.Create(options);
                 _unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+               
                 _unitOfWork.Save();
                 Response.Headers.Add("Location", session.Url);
                 return StatusCode(303);
@@ -182,6 +183,8 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 		public IActionResult Plus(int cartId)
         {
             var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId);
+            cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
+            cartFromDb.Product.StockCount = cartFromDb.Product.StockCount -1;
             cartFromDb.Count += 1;
             _unitOfWork.ShoppingCard.Update(cartFromDb);
             _unitOfWork.Save();
@@ -193,6 +196,8 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId, tracked: true);
             if (cartFromDb.Count <= 1)
             {
+                cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
+                cartFromDb.Product.StockCount = cartFromDb.Product.StockCount + 1;
                 HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard
                     .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
                 _unitOfWork.ShoppingCard.Remove(cartFromDb);
@@ -200,6 +205,8 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             else
             {
                 cartFromDb.Count -= 1;
+                cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
+                cartFromDb.Product.StockCount = cartFromDb.Product.StockCount + 1;
                 _unitOfWork.ShoppingCard.Update(cartFromDb);
             }
             _unitOfWork.Save();
@@ -209,6 +216,8 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         public IActionResult Remove(int cartId)
         {
             var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId, tracked: true);
+            cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
+            cartFromDb.Product.StockCount = cartFromDb.Product.StockCount + cartFromDb.Count;
             HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
             _unitOfWork.ShoppingCard.Remove(cartFromDb);
             _unitOfWork.Save();

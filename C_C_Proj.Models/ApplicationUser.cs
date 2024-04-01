@@ -26,6 +26,7 @@ namespace C_C_Proj_WebStore.Models
         public Company? Company { get; set; }
         [NotMapped]
         public string Role { get; set; }
+        public string? Gender { get; set; }
 
     }
 }

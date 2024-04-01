@@ -23,8 +23,8 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties:"Category").ToList();
-            
+            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+
             return View(objProductList);
         }
         public IActionResult Upsert(int? id)
@@ -32,13 +32,25 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
             ProductVM productVM = new()
             {
                 Product = new Product(),
+
+                AgeGroupList = new List<SelectListItem>
+                {
+                    new SelectListItem { Text = "Adult", Value = "Adult" },
+                    new SelectListItem { Text = "Kid", Value = "Kid" }
+                },
+                GenderList = new List<SelectListItem>
+                {
+                    new SelectListItem {Text = "Male", Value ="Male"},
+                    new SelectListItem {Text = "Female", Value = "Female"},
+                    new SelectListItem {Text = "Unisex", Value = "Unisex"}
+                },
                 CategoryList = _unitOfWork.Category.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
                 })
             };
-            if (id == null || id== 0)
+            if (id == null || id == 0)
             {
                 //create
                 return View(productVM);
@@ -46,7 +58,7 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
             else
             {
                 //update
-                productVM.Product = _unitOfWork.Product.Get(u=>u.Id == id,includeProperties: "ProductImages");
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "ProductImages");
                 return View(productVM);
             }
         }
@@ -68,16 +80,16 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
 
 
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
-                if(files != null)
+                if (files != null)
                 {
 
-                    foreach(IFormFile file in files)
+                    foreach (IFormFile file in files)
                     {
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                         string productPath = @"image\products\product-" + productVM.Product.Id;
                         string finalPath = Path.Combine(wwwRootPath, productPath);
 
-                        if(!Directory.Exists(finalPath))
+                        if (!Directory.Exists(finalPath))
                             Directory.CreateDirectory(finalPath);
 
                         using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
@@ -91,7 +103,7 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
                             ProductId = productVM.Product.Id
                         };
 
-                        if(productVM.Product.ProductImages == null)
+                        if (productVM.Product.ProductImages == null)
                             productVM.Product.ProductImages = new List<ProductImage>();
 
                         productVM.Product.ProductImages.Add(productImage);
@@ -102,7 +114,7 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
                     //_unitOfWork.Product.Update(productVM.Product);
                     //_unitOfWork.Save();
                 }
-                
+
                 TempData["success"] = "Product has been created/updated successfully";
                 return RedirectToAction("Index");
             }
@@ -117,9 +129,9 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
             }
         }
 
-        
 
-        
+
+
 
 
 
@@ -165,16 +177,16 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
 
             _unitOfWork.Product.Remove(productToBeDeleted);
             _unitOfWork.Save();
-            
+
             return Json(new { success = true, message = "Delete successful" });
         }
 
         public IActionResult DeleteImage(int imageId)
         {
-            var ImageTeBeDeleted = _unitOfWork.ProductImage.Get(u=>u.Id == imageId);
+            var ImageTeBeDeleted = _unitOfWork.ProductImage.Get(u => u.Id == imageId);
             int productId = ImageTeBeDeleted.ProductId;
 
-            if(ImageTeBeDeleted != null)
+            if (ImageTeBeDeleted != null)
             {
                 if (!string.IsNullOrEmpty(ImageTeBeDeleted.ImageUrl))
                 {

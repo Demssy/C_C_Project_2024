@@ -126,6 +126,9 @@ namespace C_C_Proj_WebStore.Areas.Identity.Pages.Account
             public int? CompanyId { get; set; }
             [ValidateNever]
             public IEnumerable<SelectListItem> CompanyList { get; set; }
+            [ValidateNever]
+            public string? Gender { get; set; }
+            public IEnumerable<SelectListItem> GenderList { get; set; }
         }
 
 
@@ -147,6 +150,12 @@ namespace C_C_Proj_WebStore.Areas.Identity.Pages.Account
                     Text = i,
                     Value = i
                 }),
+                GenderList = new List<SelectListItem>
+                {
+                    new SelectListItem {Text = "Male", Value ="Male"},
+                    new SelectListItem {Text = "Female", Value = "Female"},
+                    new SelectListItem {Text = "Other", Value = "Other"}
+                },
                 CompanyList = _unitOfWork.Company.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.Name,
