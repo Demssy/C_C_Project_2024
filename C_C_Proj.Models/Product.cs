@@ -63,6 +63,10 @@ namespace C_C_Proj_WebStore.Models
         [DisplayName("Gender")]
         public string Gender { get; set; }
 
+        [Required]
+        [DisplayName("Stock Status")]
+        public string StockStatus { get; set; }
+
         [DisplayName("Category")]
         public int CategoryId { get; set; }
 

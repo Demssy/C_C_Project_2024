@@ -1,0 +1,23 @@
+﻿@using C_C_Proj_WebStore.Utility
+@model IEnumerable<Product>
+
+
+    <div class="col-lg-3">
+        <div class="sidebar">
+            <h2>Brands</h2>
+            <label><input type="checkbox" name="brands" value="Adidas"> Addidas</label><br>
+            <label><input type="checkbox" name="brands" value="Nike"> Nike</label><br>
+            <label><input type="checkbox" name="brands" value="Pegasus"> Pegasus</label><br>
+
+            <h2>Sizes</h2>
+            <label><input type="checkbox" name="sizes" value="40"> 40</label><br>
+            <label><input type="checkbox" name="sizes" value="42"> 42</label><br>
+            <label><input type="checkbox" name="sizes" value="43"> 43</label><br>
+
+        </div>
+    </div>
+<div class="col-lg-9">
+    <div id="items_root" class="row jc">
+        <partial name="_Copy" />
+    </div>
+</div>

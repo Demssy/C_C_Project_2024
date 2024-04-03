@@ -40,6 +40,8 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
                 objFromDb.CategoryId = product.CategoryId;
                 objFromDb.Gender = product.Gender;
                 objFromDb.AgeGroup = product.AgeGroup;
+                objFromDb.StockCount = product.StockCount;
+                objFromDb.StockStatus = product.StockStatus;
                 
             }
         }

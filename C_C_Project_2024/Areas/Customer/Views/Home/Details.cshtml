@@ -1,4 +1,5 @@
-﻿@model ShoppingCard
+﻿@using C_C_Proj_WebStore.Utility
+@model ShoppingCard
 
 <form method="post">
     <input type="hidden" asp-for="ProductId" />
@@ -78,9 +79,18 @@
                         <div class="row ps-2">
                             <h6 class="text-white text-opacity-50 ">Age Group : @Model.Product.AgeGroup</h6>
                         </div>
-                        <div class="row ps-2">
-                            <h6 class="text-white text-opacity-50 ">There are @Model.Product.StockCount.ToString() items left</h6>
-                        </div>
+                        @if (Model.Product.StockStatus == SD.OutOfStock || Model.Product.StockStatus == SD.Ordered)
+                                {
+                            <div class="row ps-2">
+                                <h6 class="text-danger text-opacity-50 ">Out Of Stock</h6>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row ps-2">
+                                <h6 class="text-success text-opacity-50 ">Available In Stock</h6>
+                            </div>
+                        }
                         <div class="row ps-2">
                             <h6 class="text-white text-opacity-50  pb-2">
                                 List Price:
@@ -135,10 +145,21 @@
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 pb-1">
-                                <button type="submit"
-                                        class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
-                                    Add to Cart 
-                                </button>
+                                @if (Model.Product.StockStatus == SD.OutOfStock || Model.Product.StockStatus == SD.Ordered)
+                                {
+                                    <div>
+                                        <a asp-action="Notify" asp-route-id="@Model.Product.Id" class="btn btn-primary bg-gradient border-0 form-control">
+                                            Notify Me
+                                        </a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button type="submit"
+                                            class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
+                                        Add to Cart
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>

@@ -45,23 +45,45 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
             shoppingCard.ApplicationUserId = userId;
-            ShoppingCard cardFromDb = _unitOfWork.ShoppingCard.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCard.ProductId);
+            ShoppingCard cardFromDb = _unitOfWork.ShoppingCard.Get(u => u.ApplicationUserId == userId && u.ProductId == shoppingCard.ProductId, tracked:true);
             if (cardFromDb == null)
             {
-                
-                _unitOfWork.ShoppingCard.Add(shoppingCard);
-                shoppingCard.Product = _unitOfWork.Product.Get(u => u.Id == shoppingCard.ProductId, includeProperties: "Category,ProductImages");
-                shoppingCard.Product.StockCount -= shoppingCard.Count;
-                _unitOfWork.Save();
-                HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == userId).Count());
+                shoppingCard.Product = _unitOfWork.Product.Get(u => u.Id == shoppingCard.ProductId, includeProperties: "Category,ProductImages", tracked: true);
+                if (shoppingCard.Count > shoppingCard.Product.StockCount)
+                {
+                    TempData["Error"] = "Error: Not enough in stock";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    _unitOfWork.ShoppingCard.Add(shoppingCard);
+                    shoppingCard.Product.StockCount -= shoppingCard.Count;
+                    if (shoppingCard.Product.StockCount <= 0)
+                    {
+                        shoppingCard.Product.StockStatus = SD.OutOfStock;
+                    }
+                    _unitOfWork.Save();
+                    HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == userId).Count());
+                }
             }
             else
             {
-                cardFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cardFromDb.ProductId, includeProperties: "Category,ProductImages");
-                cardFromDb.Product.StockCount -= shoppingCard.Count;
-                cardFromDb.Count += shoppingCard.Count;
-                _unitOfWork.ShoppingCard.Update(cardFromDb);
-                _unitOfWork.Save();
+                cardFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cardFromDb.ProductId, includeProperties: "Category,ProductImages", tracked: true);
+                if (shoppingCard.Count > cardFromDb.Product.StockCount)
+                {
+                    TempData["Error"] = "Error: Not enough in stock";
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    cardFromDb.Product.StockCount -= shoppingCard.Count;
+                    cardFromDb.Count += shoppingCard.Count;
+                    if (cardFromDb.Product.StockCount <= 0) { 
+                        cardFromDb.Product.StockStatus = SD.OutOfStock;
+                    }
+                    _unitOfWork.ShoppingCard.Update(cardFromDb);
+                    _unitOfWork.Save();
+                }
             }
             TempData["Success"] = "Item added to cart successfully";
             
@@ -71,6 +93,26 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetFilteredProducts(string[] brands, double[] sizes)
+        {
+            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
+
+            if (brands != null && brands.Length > 0)
+            {
+                productList = productList.Where(p => brands.Contains(p.Brand));
+            }
+
+            if (sizes != null && sizes.Length > 0)
+            {
+                productList = productList.Where(p => sizes.Contains(p.Size));
+            }
+
+            productList = productList.OrderBy(p => p.Brand).ThenBy(p => p.Size);
+
+            return PartialView("_Copy", productList);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

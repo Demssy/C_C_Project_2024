@@ -4,3 +4,29 @@
     overflow: hidden;
     white-space: nowrap;
 }
+
+.jc {
+    justify-content: space-between;
+}
+
+@keyframes bounceIn{
+    0% {
+        transform: scale(0);
+    }
+
+    30% {
+        transform: scale(0.3);
+    }
+
+    60% {
+        transform: scale(0.7);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animateWithBounce {
+    animation: bounceIn 0.3s;
+}

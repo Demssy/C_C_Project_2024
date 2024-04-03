@@ -20,6 +20,12 @@ namespace C_C_Proj_WebStore.Utility
         public const string StatusCancelled = "Cancelled";
         public const string StatusRefunded = "Refunded";
 
+        public const string OutOfStock = "OutOfStock";
+        public const string Ordered = "Ordered";
+        public const string AvailableInStock = "AvailableInStock";
+
+
+
         public const string PaymentStatusPending = "Pending";
         public const string PaymentStatusApproved = "Approved";
         public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";

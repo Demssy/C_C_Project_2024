@@ -1,43 +1,46 @@
-﻿@model IEnumerable<Product>
+﻿@using C_C_Proj_WebStore.Utility
+@model IEnumerable<Product>
 
-    <div class="row pb-3">
-        @foreach (var item in Model)
-    {
-        <div class="col-lg-3 col-sm-6">
-            <div class="row p-2">
-                <div class="col-12 p-1">
-                    <div class="card border-0 shadow border-top border-5 rounded">
-                        @if(item.ProductImages!=null && item.ProductImages.Count() > 0)
-                        {
-                            <img src="@item.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded"/>
-                        }
-                        else
-                        {
-                            <img src="https://placehold.co/500x600/png" class="card-img-top rounded"/>
-                        }
-                        @*  <img src="@item.ImageUrl" class="card-img-top rounded"/>  *@ 
-                        <div class="card-body pb-0">
-                            <div class="pl-1">
-                                <p class="card-title h5 text-white text-opacity-75 text-uppercase text-center"> @item.ShoeModel </p>
-                                <p class="card-title text-warning text-center">by <b>@item.Brand</b></p>
-                                <p class="card-title text-white text-center">Age group : <b>@item.AgeGroup</b></p>
-                                <p class="card-title text-success text-center">There are <b>@item.StockCount.ToString()</b> items left</p>
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-white text-opacity-75 text-center mb-0">As low as: <span class="text-decoration-line-through">@item.ListPrice.ToString("c")</span> </p>
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-white text-opacity-75 text-center">As low as: <span>@item.Price100.ToString("c")</span> </p>
-                            </div>
-                        </div>
-                        <div>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary bg-gradient border-0 form-control">
-                                Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
+<div class="row pb-3">
+
+<partial name="_Container" />
+
+@section Scripts{
+    <script language="javascript">
+        const setListeners = () => {
+            $('input[type="checkbox"]').on('change', function () {
+
+                var brandFilters = [];
+                $('input[name="brands"]:checked').each(function () {
+
+                    brandFilters.push($(this).val());
+                });
+
+                var sizeFilters = [];
+                $('input[name="sizes"]:checked').each(function () {
+                    sizeFilters.push(parseFloat($(this).val()));
+                });
+
+
+                $.ajax({
+                    url: '@Url.Action("GetFilteredProducts", "Home")',
+                    type: 'POST',
+                    dataType: 'html',
+                    data: { brands: brandFilters, sizes: sizeFilters },
+                    success: function (result) {
+
+                            $('#items_root').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        }
+
+
+
+        setListeners();
+
+    </script>
+}

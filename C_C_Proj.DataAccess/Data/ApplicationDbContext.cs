@@ -85,7 +85,8 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Gender = "Male",
                 CategoryId = 1,
                 AgeGroup = "Adult",
-                StockCount = 100
+                StockCount = 100,
+                StockStatus = "AvailableInStock"
                 
             },
             new Product
@@ -103,8 +104,9 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Gender = "Male",
                 CategoryId = 2,
                 AgeGroup = "Kid",
-                StockCount = 200
-                
+                StockCount = 200,
+                StockStatus = "AvailableInStock"
+
             },
             new Product
             {
@@ -121,8 +123,9 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 Gender = "Female",
                 CategoryId = 3,
                 AgeGroup = "Adult",
-                StockCount = 300
-                
+                StockCount = 300,
+                StockStatus = "AvailableInStock"
+
             }
             );
         }
