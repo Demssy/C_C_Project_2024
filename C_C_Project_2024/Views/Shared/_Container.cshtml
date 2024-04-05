@@ -1,23 +1,83 @@
 ﻿@using C_C_Proj_WebStore.Utility
 @model IEnumerable<Product>
 
+@{
+    var uniqueColors = Model.Select(item => item.Color).Distinct().ToList();
+    var uniqueCategories = Model.Select(item => item.Category.Name).Distinct().ToList();
+    var uniqueSizes = Model.Select(item => item.Size).Distinct().ToList();
+    var uniqueBrands = Model.Select(item => item.Brand).Distinct().ToList();
+}
+
+
+
+<span>
+    <label for="searchSort">Sort <span> By</span></label>
+    <select id="searchSort" class="tG-z">
+    <option selected value="0" aria-label="Relevance" data-label="Relevance">Relevance</option>
+    @* <option value="3" aria-label="New Arrivals" data-label="New Arrivals">New Arrivals</option> *@
+    @* <option value="4" aria-label="Best Sellers" data-label="Best Sellers">Best Sellers</option> *@
+    <option value="1" aria-label="Price: Low to High" data-label="Price: Low to High">Price: Low to High</option>
+    <option value="2" aria-label="Price: High to Low" data-label="Price: High to Low">Price: High to Low</option>
+</select>
+</span>
 
     <div class="col-lg-3">
         <div class="sidebar">
-            <h2>Brands</h2>
-            <label><input type="checkbox" name="brands" value="Adidas"> Addidas</label><br>
-            <label><input type="checkbox" name="brands" value="Nike"> Nike</label><br>
-            <label><input type="checkbox" name="brands" value="Pegasus"> Pegasus</label><br>
 
-            <h2>Sizes</h2>
-            <label><input type="checkbox" name="sizes" value="40"> 40</label><br>
-            <label><input type="checkbox" name="sizes" value="42"> 42</label><br>
-            <label><input type="checkbox" name="sizes" value="43"> 43</label><br>
+
+
+        <select class="form-select" id="inputGender" aria-label="Gender" >
+            <option value="">Gender:</option>
+            <option value="Man">For Men</option>
+            <option value="Female">For Women</option>
+        </select>
+
+
+
+        <select class="form-select" id="inputCategory" aria-label="Category">
+            <option value="">Category:</option>
+            @foreach (var category in uniqueCategories)
+            {
+                <option value="@category">@category</option>
+            }
+        </select>
+
+
+        <h2>Brand:</h2>
+        @foreach (var brand in uniqueBrands)
+        {
+            <label><input type="checkbox" name="brand" value="@brand"> @brand</label>
+
+            <br>
+        }
+
+        <h2>Size:</h2>
+        @foreach (var size in uniqueSizes)
+        {
+            <label><input type="checkbox" name="size" value="@size"> @size</label>
+
+            <br>
+        }
+
+        <h2>Color:</h2>
+        @foreach (var color in uniqueColors)
+        {
+            <label><input type="checkbox" name="color" value="@color"> @color</label>
+
+            <br>
+        }
+
+        <select class="form-select" id="inputPrice" name="price" aria-label="Price">
+            <option value="-1">Price range:</option>
+            <option value="50">50$ and under</option>
+            <option value="100">100$ and under</option>
+            <option value="200">200$ and under</option>
+        </select>
 
         </div>
     </div>
 <div class="col-lg-9">
     <div id="items_root" class="row jc">
-        <partial name="_Copy" />
+        <partial name="_ProductList" />
     </div>
 </div>

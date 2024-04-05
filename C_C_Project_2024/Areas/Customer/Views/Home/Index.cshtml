@@ -8,17 +8,27 @@
 @section Scripts{
     <script language="javascript">
         const setListeners = () => {
-            $('input[type="checkbox"]').on('change', function () {
+                $('input[type="checkbox"],#inputPrice,#searchSort,#inputCategory,#inputGender').on('change', function () {
+
+                var price = parseInt($('#inputPrice').val());
+                var sort = parseInt($('#searchSort').val());
+                var category = $('#inputCategory').val();
+                var gender = $('#inputGender').val();
+
 
                 var brandFilters = [];
-                $('input[name="brands"]:checked').each(function () {
-
+                $('input[name="brand"]:checked').each(function () {
                     brandFilters.push($(this).val());
                 });
 
                 var sizeFilters = [];
-                $('input[name="sizes"]:checked').each(function () {
+                $('input[name="size"]:checked').each(function () {
                     sizeFilters.push(parseFloat($(this).val()));
+                });
+
+                var colorFilters = [];
+                $('input[name="color"]:checked').each(function () {
+                    colorFilters.push($(this).val());
                 });
 
 
@@ -26,7 +36,7 @@
                     url: '@Url.Action("GetFilteredProducts", "Home")',
                     type: 'POST',
                     dataType: 'html',
-                    data: { brands: brandFilters, sizes: sizeFilters },
+                        data: { brands: brandFilters, sizes: sizeFilters, price: price, color: colorFilters, category: category,gender:gender, sort: sort },
                     success: function (result) {
 
                             $('#items_root').html(result);

@@ -96,7 +96,52 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetFilteredProducts(string[] brands, double[] sizes)
+        public IActionResult GetFilteredProducts(string[] brands, double[] sizes,int price,string[] color,string category,string gender, int sort)
+        {
+            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
+
+
+            if (brands != null && brands.Length > 0)
+            {
+                productList = productList.Where(p => brands.Contains(p.Brand));
+            }
+
+            if (color != null && color.Length > 0)
+            {
+                productList = productList.Where(p => color.Contains(p.Color));
+            }
+
+            if (sizes != null && sizes.Length > 0)
+            {
+                productList = productList.Where(p => sizes.Contains(p.Size));
+            }
+
+            if (price ==50 || price == 100 || price==200)
+            {
+                productList = productList.Where(p => ((int)p.Price)<=price);
+            }
+
+            if(category != null && category.Length > 0)
+            {
+                productList = productList.Where(p => p.Category.Name == category);
+            }
+            if (gender != null && gender.Length > 0)
+            {
+                productList = productList.Where(p => p.Gender == gender);
+            }
+
+            if (sort == 1)
+                productList = productList.OrderBy(p => p.Price);
+            if (sort == 2)
+                productList = productList.OrderByDescending(p => p.Price);
+            if (sort == 0)
+                productList = productList.OrderBy(p => p.Brand).ThenBy(p => p.Size);
+
+
+            return PartialView("_ProductList", productList);
+        }
+
+        public IActionResult GetCategories(string[] brands, double[] sizes)
         {
             IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
 
@@ -112,7 +157,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
             productList = productList.OrderBy(p => p.Brand).ThenBy(p => p.Size);
 
-            return PartialView("_Copy", productList);
+            return PartialView("_ProductList", productList);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
