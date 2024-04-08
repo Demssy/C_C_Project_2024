@@ -25,17 +25,18 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
             dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = false)
+        public T Get(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query;
-            if (tracked)
-            {
-                query = dbSet;
-            }
-            else
-            {
-                query = dbSet.AsNoTracking();
-            }
+            //if (tracked)
+            //{
+            //    query = dbSet;
+            //}
+            //else
+            //{
+            //    query = dbSet.AsNoTracking();
+            //}
+            query = dbSet;
             query = query.Where(filter);
             if (!string.IsNullOrWhiteSpace(includeProperties))
             {

@@ -1,5 +1,6 @@
 ﻿@model OrderVM
 @using C_C_Proj_WebStore.Utility
+@using System.Security.Claims
 <form method="post">
     <input asp-for="OrderHeader.Id" hidden />
     <br />
@@ -227,6 +228,10 @@
                                     </div>
                                 </li>
                             </ul>
+                            @if (Model.OrderHeader.PaymentStatus == SD.StatusPending && Model.OrderHeader.OrderStatus == SD.AvailableInStock && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.OrderHeader.ApplicationUserId)
+                            {
+                                <button type="submit" asp-action="OrderNow" class="btn btn-primary form-control my-1">Order Now</button>
+                            }
                             @if (Model.OrderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment && Model.OrderHeader.OrderStatus == SD.StatusShipped)
                             {
                                 <button type="submit" class="btn btn-success form-control my-1">Pay Now</button>
@@ -236,6 +241,10 @@
                                 if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
                                 {
                                     <button type="submit" asp-action="StartProcessing" class="btn btn-primary form-control my-1">Start Processing</button>
+                                }
+                                if (Model.OrderHeader.OrderStatus == SD.PendingForOrderToStock)
+                                {
+                                    <button type="submit" asp-action="OrderProduct" class="btn btn-primary form-control my-1">Order Product</button>
                                 }
                                 if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
                                 {

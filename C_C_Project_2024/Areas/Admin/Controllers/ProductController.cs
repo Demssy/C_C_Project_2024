@@ -6,7 +6,9 @@ using C_C_Proj_WebStore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace C_C_Proj_WebStore.Areas.Admin.Controllers
 {
@@ -27,6 +29,34 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
 
             return View(objProductList);
         }
+
+
+        public IActionResult Warehouse(int? id)
+        {
+            Product? productToBeOrdered = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category");
+            if (productToBeOrdered == null)
+            {
+                return NotFound();
+            }
+            productToBeOrdered.ProductImages = _unitOfWork.ProductImage.GetAll(u => u.ProductId == id).ToList();
+            return View(productToBeOrdered);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult UpdateProductStock2(Product product)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            Product productFromDb = _unitOfWork.Product.Get(u => u.Id == product.Id, includeProperties: "Category");
+            productFromDb.StockStatus = SD.AvailableInStock;
+            productFromDb.StockCount += product.StockCount;
+            _unitOfWork.Product.Update(productFromDb);
+            
+            _unitOfWork.Save();
+            return RedirectToAction(nameof(Index), new { id = productFromDb.Id });
+        }
+
         public IActionResult Upsert(int? id)
         {
             ProductVM productVM = new()
@@ -70,10 +100,26 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
 
                 if (productVM.Product.Id != 0)
                 {
+                    if(productVM.Product.StockCount <= 0)
+                    {
+                        productVM.Product.StockStatus = SD.OutOfStock;
+                    }
+                    else
+                    {
+                        productVM.Product.StockStatus = SD.AvailableInStock;
+                    }
                     _unitOfWork.Product.Update(productVM.Product);
                 }
                 else
                 {
+                    if (productVM.Product.StockCount <= 0)
+                    {
+                        productVM.Product.StockStatus = SD.OutOfStock;
+                    }
+                    else
+                    {
+                        productVM.Product.StockStatus = SD.AvailableInStock;
+                    }
                     _unitOfWork.Product.Add(productVM.Product);
                 }
                 _unitOfWork.Save();

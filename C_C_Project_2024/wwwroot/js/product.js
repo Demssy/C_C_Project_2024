@@ -10,11 +10,12 @@ function loadDataTable() {
         ajax: { url: '/Admin/Product/getall' },
 
         columns: [
-            { data: 'brand', "width": "15%" },
-            { data: 'shoeModel', "width": "15%" },
+            { data: 'brand', "width": "10%" },
+            { data: 'shoeModel', "width": "10%" },
             { data: 'size', "width": "5%" },
             { data: 'listPrice', "width": "5%" },
             { data: 'category.name', "width": "10%" },
+            { data: 'stockStatus', "width": "10%" },
             { data: 'gender', "width": "5%" },
             { data: 'stockCount', "width": "5%" },
             { data: 'ageGroup', "width": "5%" },
@@ -23,15 +24,18 @@ function loadDataTable() {
                 "render": function (data) {
                     return `
                     <div class="w-75 btn-group" role="group">
-                        <a href="/Admin/Product/Upsert/${data}" class="btn btn-primary mx-2 text-white" style="cursor:pointer; width:100px;">
+                        <a href="/Admin/Product/Upsert/${data}" class="btn btn-primary mx-2 text-white" style="cursor:pointer; width:110px; height:60px;">
                             <i class="bi bi-pencil"></i> Edit </a>
                         &nbsp;
-                        <a onClick=Delete('/Admin/Product/Delete/${data}') class="btn btn-danger text-white" style="cursor:pointer; width:100px;">
+                        <a onClick=Delete('/Admin/Product/Delete/${data}') class="btn btn-danger text-white" style="cursor:pointer; width:110px; margin-left:20px; height:60px;">
                             <i class="bi bi-trash"></i> Delete </a>
+                            &nbsp;
+                        <a href="/Admin/Product/Warehouse/${data}" class="btn btn-success text-white " style="cursor:pointer; width:110px; margin-left:30px; height:60px;">
+                            <i class="bi bi-archive"></i> Warehouse </a>
                     </div>
                     `;
                 },
-                "width": "25%"
+                "width": "35%"
             }
         ]
     });

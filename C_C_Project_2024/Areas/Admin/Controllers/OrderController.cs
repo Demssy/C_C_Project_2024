@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
+using System.Linq;
 using System.Security.Claims;
+using Product = C_C_Proj_WebStore.Models.Product;
 
 namespace C_C_Proj_WebStore.Areas.Admin.Controllers
 {
@@ -34,10 +36,22 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
                 OrderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == orderId, includeProperties: "ApplicationUser"),
                 OrderDetail = _unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == orderId, includeProperties: "Product")
             };
+           
             return View(OrderVM);
         }
 
         [HttpPost]
+        public IActionResult OrderNow()
+        {
+            var orderDetails = _unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == OrderVM.OrderHeader.Id);
+            Product product = _unitOfWork.Product.Get(u => u.Id == orderDetails.First().ProductId);
+            TempData["productId"] = product.Id;
+            _unitOfWork.OrderHeader.Remove(OrderVM.OrderHeader);
+            _unitOfWork.Save();
+            return RedirectToAction("Details", "Home", new { area = "Customer" });
+        }
+
+            [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
         public IActionResult UpdateOrderDetail()
         {
@@ -89,6 +103,37 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
             _unitOfWork.OrderHeader.Update(orderHeader);
             _unitOfWork.Save();
             TempData["Success"] = "Order Shipped Successfully";
+            return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
+        }
+
+        
+        public IActionResult OrderProduct()
+        {
+            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+            var orderDetail = _unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
+            
+            Product product = orderDetail.First().Product;
+            product.ProductImages = _unitOfWork.ProductImage.GetAll(u => u.ProductId == product.Id).ToList();
+            return View(product);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult UpdateProductStock(Product product)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.ApplicationUserId == userId);
+           
+            OrderVM.OrderHeader = orderHeader;
+            OrderVM.OrderDetail = _unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == orderHeader.Id, includeProperties: "Product");
+            Product productFromDb = _unitOfWork.Product.Get(u => u.Id == product.Id, includeProperties: "Category");
+            productFromDb.StockStatus = SD.AvailableInStock;
+            orderHeader.OrderStatus = SD.AvailableInStock;
+            productFromDb.StockCount += product.StockCount;
+            _unitOfWork.Product.Update(productFromDb);
+            _unitOfWork.OrderHeader.Update(orderHeader);
+            _unitOfWork.Save();
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
         }
 

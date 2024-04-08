@@ -63,9 +63,9 @@ namespace C_C_Proj_WebStore.Models
         [DisplayName("Gender")]
         public string Gender { get; set; }
 
-        [Required]
+        [ValidateNever]
         [DisplayName("Stock Status")]
-        public string StockStatus { get; set; }
+        public string? StockStatus { get; set; }
 
         [DisplayName("Category")]
         public int CategoryId { get; set; }

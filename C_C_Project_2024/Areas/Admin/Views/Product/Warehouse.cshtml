@@ -1,0 +1,88 @@
+﻿@model Product
+@using C_C_Proj_WebStore.Utility
+<form method="post" class="mb-4">
+    <input asp-for="Id" hidden />
+    <br />
+    <div class="container">
+        <div class="card">
+            <div class="card-header bg-dark text-light ml-0">
+                <div class="container row">
+                    <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                        Order Product
+                    </div>
+                    <div class="col-12 col-md-4 offset-md-2 text-right">
+                        <a asp-action="Index" class="btn btn-outline-info form-control btn-sm">Back to Products</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body ">
+                <div class="container rounded p-2">
+                    <div class="row">
+
+
+                        <h4 class="d-flex justify-content-between  mb-3">
+                            <span class="text-primary">Product Details</span>
+                        </h4>
+                        <label class="btn btn-outline-primary form-control my-2">Order Status - @Model.StockStatus</label>
+
+                        <ul class="list-group mb-3">
+
+                            <li class="list-group-item d-flex justify-content-between p-2">
+                                <div class="row container">
+                                    <div class="col-lg-3 col-sm-6 animateWithBounce">
+                                        <div class="row p-2">
+                                            <div class="col-12 p-1">
+                                                <div class="card border-0 shadow border-top border-5 rounded">
+                                                    @if (Model.ProductImages != null && Model.ProductImages.Count() > 0)
+                                                    {
+                                                        <img src="@Model.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+                                                    }
+                                                    @*  <img src="@item.ImageUrl" class="card-img-top rounded"/>  *@
+                                                    <div class="card-body pb-0">
+                                                        <div class="pl-1">
+                                                            <p class="card-title h5 text-white text-opacity-75 text-uppercase text-center"> @Model.ShoeModel </p>
+                                                            <p class="card-title text-warning text-center">by <b>@Model.Brand</b></p>
+                                                            <p class="card-title text-white text-center">Age group : <b>@Model.AgeGroup</b></p>
+                                                            <p class="card-title text-white text-center">Gender : <b>@Model.Gender</b></p>
+
+                                                            <h3 class="card-title text-white text-center">Stock Status : <b>@Model.StockStatus</b></h3>
+                                                            <h3 class="card-title text-white text-center">Stock Count : <b>@Model.StockCount</b></h3>
+
+                                                        </div>
+                                                        <div class="row container">
+
+                                                            <div class="input-group mb-3">
+                                                                <span class="input-group-text bg-primary text-white border-0 fw-semibold"
+                                                                      id="inputGroup-sizing-default">
+                                                                    Count
+                                                                </span>
+                                                                <input asp-for="@Model.StockCount" type="number" value="1" class="form-control text-end"
+                                                                       aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="row  form-control">
+                                                                    <button type="submit" asp-action="UpdateProductStock2" class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">Order Product From Warehouse</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </li>
+                            
+                        </ul>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

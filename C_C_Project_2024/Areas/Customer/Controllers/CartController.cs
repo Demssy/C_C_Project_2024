@@ -43,28 +43,60 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
         public IActionResult Summary()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ShoppingCartVM = new ShoppingCartVM()
+            if (TempData["productId"] == null)
             {
-                ShoppingCartList = _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == claim, includeProperties: "Product"),
-                OrderHeader = new OrderHeader()
-            };
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                ShoppingCartVM = new ShoppingCartVM()
+                {
+                    ShoppingCartList = _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == claim, includeProperties: "Product"),
+                    OrderHeader = new OrderHeader()
+                };
 
-            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim);
-            ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
-            ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
-            ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAdress;
-            ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
-            ShoppingCartVM.OrderHeader.Country = ShoppingCartVM.OrderHeader.ApplicationUser.State;
-            ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalAdress;
+                ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim);
+                ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
+                ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+                ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAdress;
+                ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
+                ShoppingCartVM.OrderHeader.Country = ShoppingCartVM.OrderHeader.ApplicationUser.State;
+                ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalAdress;
 
-            foreach (var cart in ShoppingCartVM.ShoppingCartList)
-            {
-                cart.Price = CalculateOrderTotal(cart);
-                ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
+                foreach (var cart in ShoppingCartVM.ShoppingCartList)
+                {
+                    cart.Price = CalculateOrderTotal(cart);
+                    ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
+                }
+                return View(ShoppingCartVM);
             }
-            return View(ShoppingCartVM);
+            else
+            {
+                var productId = Convert.ToInt32(TempData["productId"]);
+                var productCount = Convert.ToInt32(TempData["productCount"]);
+                ShoppingCard Card = new()
+                {
+                    Product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category,ProductImages"),
+                    ProductId = productId,
+                    Count = productCount
+                };
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                ShoppingCartVM = new ShoppingCartVM()
+                {
+                    ShoppingCartList = new List<ShoppingCard>(),
+                    OrderHeader = new OrderHeader()
+                };
+                ShoppingCartVM.ShoppingCartList.Append(Card);
+                ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim);
+                ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
+                ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+                ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAdress;
+                ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
+                ShoppingCartVM.OrderHeader.Country = ShoppingCartVM.OrderHeader.ApplicationUser.State;
+                ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalAdress;
+                Card.Price = CalculateOrderTotal(Card);
+                ShoppingCartVM.OrderHeader.OrderTotal += Card.Price * Card.Count;
+                return View(ShoppingCartVM);
+            }
         }
 
         [HttpPost]
@@ -184,20 +216,35 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
             var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId);
             cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
-            cartFromDb.Product.StockCount = cartFromDb.Product.StockCount -1;
-            cartFromDb.Count += 1;
-            _unitOfWork.ShoppingCard.Update(cartFromDb);
-            _unitOfWork.Save();
-            return RedirectToAction(nameof(Index));
+            if (cartFromDb.Product.StockCount - 1 < 0)
+            {
+                cartFromDb.Product.StockStatus = SD.OutOfStock;
+                TempData["Error"] = "Not enough in stock";
+                _unitOfWork.ShoppingCard.Update(cartFromDb);
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                cartFromDb.Product.StockCount = cartFromDb.Product.StockCount - 1;
+                cartFromDb.Count += 1;
+                _unitOfWork.ShoppingCard.Update(cartFromDb);
+                _unitOfWork.Save();
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public IActionResult Minus(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId, tracked: true);
+            var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId);
             if (cartFromDb.Count <= 1)
             {
                 cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
                 cartFromDb.Product.StockCount = cartFromDb.Product.StockCount + 1;
+                if (cartFromDb.Product.StockCount > 0)
+                {
+                    cartFromDb.Product.StockStatus = SD.AvailableInStock;
+                }
                 HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard
                     .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
                 _unitOfWork.ShoppingCard.Remove(cartFromDb);
@@ -207,6 +254,10 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 cartFromDb.Count -= 1;
                 cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
                 cartFromDb.Product.StockCount = cartFromDb.Product.StockCount + 1;
+                if (cartFromDb.Product.StockCount > 0)
+                {
+                    cartFromDb.Product.StockStatus = SD.AvailableInStock;
+                }
                 _unitOfWork.ShoppingCard.Update(cartFromDb);
             }
             _unitOfWork.Save();
@@ -215,7 +266,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
         public IActionResult Remove(int cartId)
         {
-            var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId, tracked: true);
+            var cartFromDb = _unitOfWork.ShoppingCard.Get(u => u.Id == cartId);
             cartFromDb.Product = _unitOfWork.Product.Get(u => u.Id == cartFromDb.ProductId);
             cartFromDb.Product.StockCount = cartFromDb.Product.StockCount + cartFromDb.Count;
             HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
