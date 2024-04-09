@@ -88,7 +88,15 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim)
             };
             Card.Price = CalculateOrderTotal(Card);
-            return View(Card);
+            if (Card.Count > Card.Product.StockCount)
+            {
+                TempData["Error"] = "Not enough in stock";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return View(Card);
+            }
         }
 
 
@@ -122,6 +130,9 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             };
             Card.Price = CalculateOrderTotal(Card);
             //ShoppingCard.Price = CalculateOrderTotal(shoppingCard);
+            Product productFromDb = _unitOfWork.Product.Get(u => u.Id == Card.ProductId, includeProperties: "Category,ProductImages");
+
+
             orderHeader.OrderTotal += Card.Price * Card.Count;
 
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
@@ -134,6 +145,12 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 orderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
                 orderHeader.OrderStatus = SD.StatusApproved;
             }
+
+            if (productFromDb.StockCount <= 0)
+            {
+                productFromDb.StockStatus = SD.OutOfStock;
+            }
+            _unitOfWork.Product.Update(productFromDb);
             _unitOfWork.OrderHeader.Add(orderHeader);
             _unitOfWork.Save();
 
@@ -144,6 +161,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 Price = Card.Price,
                 Count = Card.Count
             };
+
             _unitOfWork.OrderDetail.Add(orderDetail);
             _unitOfWork.Save();
 
@@ -180,47 +198,61 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
                 _unitOfWork.Save();
                 Response.Headers.Add("Location", session.Url);
+                Card.Product.StockCount -= Card.Count;
+                if (Card.Product.StockCount <= 0)
+                {
+                    Card.Product.StockStatus = SD.OutOfStock;
+                }
+                Card.Product.PurchasesCount++;
+                _unitOfWork.Product.Update(Card.Product);
+                _unitOfWork.Save();
                 return StatusCode(303);
+
             }
-			return RedirectToAction("OrderConfirmationn", new { id = orderHeader.Id });
-		}
+            return RedirectToAction("OrderConfirmationn", new { id = orderHeader.Id });
+        }
 
-		public IActionResult OrderConfirmationn(int id)
-		{
+        public IActionResult OrderConfirmationn(int id)
+        {
 
-			OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
-			if (orderHeader == null)
-			{
-				HttpContext.Session.Clear();
-				return View();
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+            if (orderHeader == null)
+            {
+                HttpContext.Session.Clear();
+                return View();
 
-			}
-			if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
-			{
-				var service = new SessionService();
-				Session session = service.Get(orderHeader.SessionId);
+            }
+            if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+            {
+                var service = new SessionService();
+                Session session = service.Get(orderHeader.SessionId);
 
-				if (session.PaymentStatus.ToLower() == "paid")
-				{
-					_unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
-					_unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-					_unitOfWork.Save();
-				}
-				HttpContext.Session.Clear();
-				//else
-				//            {
-				//	orderHeader.PaymentStatus = SD.PaymentStatusRejected;
-				//}
-			}
-			
-			return View(id);
-		}
+                if (session.PaymentStatus.ToLower() == "paid")
+                {
+                    _unitOfWork.OrderHeader.UpdateStripePaymentId(id, session.Id, session.PaymentIntentId);
+                    _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                    _unitOfWork.Save();
+                }
+                HttpContext.Session.Clear();
+                //else
+                //            {
+                //	orderHeader.PaymentStatus = SD.PaymentStatusRejected;
+                //}
+            }
 
-		private double CalculateOrderTotal(ShoppingCard shoppingCard)
+            return View(id);
+        }
+
+        private double CalculateOrderTotal(ShoppingCard shoppingCard)
         {
             if (shoppingCard.Count <= 50)
             {
-                return shoppingCard.Product.Price;
+				if (shoppingCard.Product.Discount > 0)
+				{
+					return shoppingCard.Product.Price - (shoppingCard.Product.Price * shoppingCard.Product.Discount);
+
+				}
+				return shoppingCard.Product.Price;
             }
             else
             {
@@ -281,7 +313,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 else
                 {
                     _unitOfWork.ShoppingCard.Add(shoppingCard);
-                    shoppingCard.Product.StockCount -= shoppingCard.Count;
+                    
                     if (shoppingCard.Product.StockCount <= 0)
                     {
                         shoppingCard.Product.StockStatus = SD.OutOfStock;
@@ -300,7 +332,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 }
                 else
                 {
-                    cardFromDb.Product.StockCount -= shoppingCard.Count;
+                   
                     cardFromDb.Count += shoppingCard.Count;
                     if (cardFromDb.Product.StockCount <= 0)
                     {
@@ -321,7 +353,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetFilteredProducts(string[] brands, double[] sizes,int price,string[] color,string category,string gender, int sort)
+        public IActionResult GetFilteredProducts(string[] brands, double[] sizes, int price, string[] color, string category, string gender, int sort)
         {
             IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
 
@@ -341,12 +373,12 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 productList = productList.Where(p => sizes.Contains(p.Size));
             }
 
-            if (price ==50 || price == 100 || price==200)
+            if (price == 50 || price == 100 || price == 200)
             {
-                productList = productList.Where(p => ((int)p.Price)<=price);
+                productList = productList.Where(p => ((int)p.Price) <= price);
             }
 
-            if(category != null && category.Length > 0)
+            if (category != null && category.Length > 0)
             {
                 productList = productList.Where(p => p.Category.Name == category);
             }
@@ -356,13 +388,37 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             }
 
             if (sort == 1)
-                productList = productList.OrderBy(p => p.Price);
+                productList = productList.OrderBy(p => p.Price - (p.Price * p.Discount));
             if (sort == 2)
-                productList = productList.OrderByDescending(p => p.Price);
+                productList = productList.OrderByDescending(p => p.Price - (p.Price * p.Discount));
             if (sort == 0)
                 productList = productList.OrderBy(p => p.Brand).ThenBy(p => p.Size);
+            if (sort == 4)
+                productList = productList.OrderByDescending(p => p.PurchasesCount);
+            if (sort == 3)
+                productList = productList.Where(p => p.Category.Name == "New");
+            if (sort == 5)
+                productList = productList.OrderByDescending(p => p.Discount).Where(p => p.Discount > 0);
 
 
+            return PartialView("_ProductList", productList);
+        }
+
+        public IActionResult RangeSort(double? minPrice, double? maxPrice)
+        {
+            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
+            if (minPrice != null && maxPrice != null)
+            {
+                productList = productList.Where(p => p.Price - (p.Price * p.Discount) >= minPrice && p.Price - (p.Price * p.Discount) <= maxPrice);
+            }
+            if (minPrice != null && maxPrice == null)
+            {
+                productList = productList.Where(p => p.Price - (p.Price * p.Discount) >= minPrice);
+            }
+            if (minPrice == null && maxPrice != null)
+            {
+                productList = productList.Where(p => p.Price - (p.Price * p.Discount) <= maxPrice);
+            }
             return PartialView("_ProductList", productList);
         }
 

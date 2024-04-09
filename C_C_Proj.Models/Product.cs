@@ -31,9 +31,17 @@ namespace C_C_Proj_WebStore.Models
         [DisplayName("Stock Count")]
         public int StockCount { get; set; }
 
+        [ValidateNever]
+        [DisplayName("Purchases Count")]
+        public int PurchasesCount { get; set; }
+
         [Required]
         [DisplayName("List Price")]
         public double ListPrice { get; set; }
+
+        [ValidateNever]
+        [DisplayName("Discount")]
+        public double Discount { get; set; }
 
         [Required]
         [DisplayName("Price for 1-50")]

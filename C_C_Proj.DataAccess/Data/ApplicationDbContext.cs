@@ -86,7 +86,9 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 CategoryId = 1,
                 AgeGroup = "Adult",
                 StockCount = 100,
-                StockStatus = "AvailableInStock"
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
                 
             },
             new Product
@@ -105,7 +107,9 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 CategoryId = 2,
                 AgeGroup = "Kid",
                 StockCount = 200,
-                StockStatus = "AvailableInStock"
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
 
             },
             new Product
@@ -124,7 +128,9 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 CategoryId = 3,
                 AgeGroup = "Adult",
                 StockCount = 300,
-                StockStatus = "AvailableInStock"
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
 
             }
             );

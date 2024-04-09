@@ -1,56 +1,133 @@
 ﻿@using C_C_Proj_WebStore.Utility
 @model IEnumerable<Product>
 
-<div class="row pb-3">
+<div class="row pb-3 mb-4">
 
-<partial name="_Container" />
+    <partial name="_Container" />
 
-@section Scripts{
-    <script language="javascript">
-        const setListeners = () => {
+    @section Scripts {
+        <script language="javascript">
+            const setListeners = () => {
                 $('input[type="checkbox"],#inputPrice,#searchSort,#inputCategory,#inputGender').on('change', function () {
 
-                var price = parseInt($('#inputPrice').val());
-                var sort = parseInt($('#searchSort').val());
-                var category = $('#inputCategory').val();
-                var gender = $('#inputGender').val();
+                    var price = parseInt($('#inputPrice').val());
+                    var sort = parseInt($('#searchSort').val());
+                    var category = $('#inputCategory').val();
+                    var gender = $('#inputGender').val();
 
 
-                var brandFilters = [];
-                $('input[name="brand"]:checked').each(function () {
-                    brandFilters.push($(this).val());
-                });
+                    var brandFilters = [];
+                    $('input[name="brand"]:checked').each(function () {
+                        brandFilters.push($(this).val());
+                    });
 
-                var sizeFilters = [];
-                $('input[name="size"]:checked').each(function () {
-                    sizeFilters.push(parseFloat($(this).val()));
-                });
+                    var sizeFilters = [];
+                    $('input[name="size"]:checked').each(function () {
+                        sizeFilters.push(parseFloat($(this).val()));
+                    });
 
-                var colorFilters = [];
-                $('input[name="color"]:checked').each(function () {
-                    colorFilters.push($(this).val());
-                });
+                    var colorFilters = [];
+                    $('input[name="color"]:checked').each(function () {
+                        colorFilters.push($(this).val());
+                    });
 
 
-                $.ajax({
-                    url: '@Url.Action("GetFilteredProducts", "Home")',
-                    type: 'POST',
-                    dataType: 'html',
-                        data: { brands: brandFilters, sizes: sizeFilters, price: price, color: colorFilters, category: category,gender:gender, sort: sort },
-                    success: function (result) {
+                    $.ajax({
+                        url: '@Url.Action("GetFilteredProducts", "Home")',
+                        type: 'POST',
+                        dataType: 'html',
+                        data: { brands: brandFilters, sizes: sizeFilters, price: price, color: colorFilters, category: category, gender: gender, sort: sort },
+                        success: function (result) {
 
                             $('#items_root').html(result);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                });
+            }
+
+
+
+            setListeners();
+
+        </script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script language="javascript">
+
+            function updateMinPriceLabel(value1) {
+                document.getElementById('minPriceLabel').textContent = value1;
+            }
+
+            function updateMaxPriceLabel(value) {
+                document.getElementById('maxPriceLabel').textContent = value;
+            }
+
+            // Initialize labels with default range values
+            window.onload = function () {
+                updateMinPriceLabel(document.getElementById('minPriceRange').value);
+                updateMaxPriceLabel(document.getElementById('maxPriceRange').value);
+            };
+            function sendRangeValues() {
+                var minPrice = $('#minPriceRange').val();
+                var maxPrice = $('#maxPriceRange').val();
+
+                $.ajax({
+                    url: '@Url.Action("RangeSort", "Home")',
+                    data: { minPrice: minPrice, maxPrice: maxPrice },
+                    type: 'POST',
+                    dataType: 'html',
+                    success: function (result) {
+
+                        $('#items_root').html(result);
                     },
-                    error: function (xhr, status, error) {
-                        console.error(error);
+                    error: function () {
+                        alert('Error loading products.');
                     }
                 });
+            }
+
+            // Initialize labels with default range values
+            $(document).ready(function () {
+                updateMinPriceLabel($('#minPriceRange').val());
+                updateMaxPriceLabel($('#maxPriceRange').val());
             });
-        }
+            setListeners();
+        </script>
 
+        @* </script>
+    <script>
+    function updateMinPriceLabel(value) {
+    document.getElementById('minPriceLabel').textContent = value;
+    }
 
+    function updateMaxPriceLabel(value) {
+    document.getElementById('maxPriceLabel').textContent = value;
+    }
 
-        setListeners();
+    function sendRangeValues() {
+    var minPrice = $('#minPriceRange').val();
+    var maxPrice = $('#maxPriceRange').val();
 
-    </script>
-}
+    $.ajax({
+    url: '@Url.Action("RangeSort", "YourControllerName")',
+    data: { minPrice: minPrice, maxPrice: maxPrice },
+    type: 'GET',
+    success: function (data) {
+    $('#productListContainer').html(data);
+    },
+    error: function () {
+    alert('Error loading products.');
+    }
+    });
+    }
+
+    // Initialize labels with default range values
+    $(document).ready(function () {
+    updateMinPriceLabel($('#minPriceRange').val());
+    updateMaxPriceLabel($('#maxPriceRange').val());
+    });
+    </script> *@
+    }

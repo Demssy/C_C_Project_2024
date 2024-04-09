@@ -1,5 +1,6 @@
 ﻿@using C_C_Proj_WebStore.Utility
 @model ShoppingCartVM
+@{double savings = 0;}
 <form method="post">
     <br />
     <div class="card shadow border-0">
@@ -17,8 +18,7 @@
             </div>
         </div>
         <div class="card-body my-4">
-            <div class="row">
-            </div>
+           
             <div class="row mb-3 pb-3">
                
                 <div class="col-md-10 offset-md-1">
@@ -36,17 +36,32 @@
                                     <img src="https://placehold.co/500x600/png" class="card-img-top rounded w-100" />
                                 }
                             </div>
+                           
                             <div class="col-12 col-lg-6 pt-md-3">
                                 <h5 class="text-uppercase text-warning"><strong>@item.Product.ShoeModel</strong></h5>
+                                
                                 <h7 class="text-uppercase text-success"><strong>By @item.Product.Brand</strong></h7>
                                 <p><small>@Html.Raw(@item.Product.Description)</small></p>
                             </div>
                             <div class="col-12  col-lg-5 text-center row">
-                                <div class="col-3 text-md-right pt-2 pt-md-4">
-                                    <h6 class="fw-semibold">
-                                        @item.Price.ToString("c")
-                                        <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
-                                    </h6>
+                                <div class="col-3 text-md-right pt-1 pt-md-2">
+                                    @if(item.Product.Discount > 0)
+                                    {
+                                        <span class="badge bg-success mt-0">Discount @item.Product.Discount.ToString("P0")</span>
+                                        <h6 class="fw-semibold">
+                                            @item.Price.ToString("c")
+                                            <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
+                                            @{savings += (item.Product.Price * item.Product.Discount) * item.Count;}
+                                        </h6>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="fw-semibold pt-2">
+                                            @item.Price.ToString("c")
+                                            <span class="text-muted">&nbsp;x&nbsp;</span>@item.Count
+                                        </h6>
+                                    }
+                                    
                                 </div>
                                 <div class="col-6 col-sm-4 col-lg-6 pt-2">
                                     <div class="w-75 btn-group" role="group">
@@ -89,6 +104,13 @@
                                 <h5 class="text-dark fw-semibold text-uppercase"> Total (ILS)</h5>
                                 <h4 class="text-dark fw-bolder">@Model.OrderHeader.OrderTotal.ToString("c")</h4>
                             </li>
+                            @if(savings > 0)
+                            {
+                                <li class="d-flex justify-content-between align-items-center">
+                                    <h5 class="text-dark fw-semibold text-uppercase"> YOU SAVED</h5>
+                                    <h4 class="text-dark fw-bolder">@savings.ToString("c")</h4>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>

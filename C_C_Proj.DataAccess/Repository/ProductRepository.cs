@@ -42,7 +42,8 @@ namespace C_C_Proj_WebStore.DataAccess.Repository
                 objFromDb.AgeGroup = product.AgeGroup;
                 objFromDb.StockCount = product.StockCount;
                 objFromDb.StockStatus = product.StockStatus;
-                
+                objFromDb.PurchasesCount = product.PurchasesCount;
+                objFromDb.Discount = product.Discount;
             }
         }
     }

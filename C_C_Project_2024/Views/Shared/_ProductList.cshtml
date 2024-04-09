@@ -2,50 +2,108 @@
 @model IEnumerable<Product>
 
 
-    @foreach (var item in Model)
-    {
+@foreach (var item in Model)
+{
     <div class="col-lg-4 col-sm-6 animateWithBounce">
-            <div class="row p-2">
-                <div class="col-12 p-1">
-                    <div class="card border-0 shadow border-top border-5 rounded">
-                        @if (item.ProductImages != null && item.ProductImages.Count() > 0)
+        <div class="row p-2">
+            <div class="col-12 p-1">
+                <div class="card mb-3 border-0  border-top border-0 rounded">
+                    <h3 class="card-header">@item.ShoeModel</h3>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary"><b>By @item.Brand</b></h5>
+                    </div>
+                    <div class="card-img">
+                        
+                        @if (item.ProductImages != null && item.ProductImages.Count > 0)
                         {
-                            <img src="@item.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
+                            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+
+                                    @foreach (var imageWithIndex in item.ProductImages.Select((image, index) => new { ProductImage = image, Index = index }))
+                                    {
+                                        <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="@imageWithIndex.Index"
+                                                class="@(imageWithIndex.Index==0?"active":"")" aria-current="true" aria-label="Slide 1"></button>
+
+                                    }
+
+
+                                </div>
+                                <div class="carousel-inner">
+                                    @foreach (var imageWithIndex in item.ProductImages.Select((image, index) => new { ProductImage = image, Index = index }))
+                                    {
+                                        <div class="@(imageWithIndex.Index==0?"carousel-item active":"carousel-item")">
+                                            <img src="@imageWithIndex.ProductImage.ImageUrl" class=" d-block w-100" alt="...">
+
+                                        </div>
+                                    }
+                                </div>
+                                @* <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                        </button> *@
+                            </div>
+                        }
+
+                        @* @if (item.ProductImages != null && item.ProductImages.Count() > 0)
+                    {
+                    <img src="@item.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded border-1 rounded d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle" />
+                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                    } *@
+                        else
+                        {
+                            <img src="https://placehold.co/500x600/png" class="card-img-top rounded border-1 rounded d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle" />
+                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                        }
+                        
+                    </div>
+                    <div class="card-body">
+                        <figure class="text-center">
+                            <blockquote class="blockquote">
+                                <p class="mb-0 card-text">@Html.Raw(@item.Description)</p>
+
+                            </blockquote>
+
+                        </figure>
+
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-center">  <span class="badge rounded-pill bg-primary">Category @item.Category.Name</span></li>
+                        @if (item.StockStatus == SD.OutOfStock || item.StockStatus == SD.Ordered)
+                        {
+                            <li class="list-group-item text-danger text-center"><span class="badge rounded-pill bg-warning">Out Of Stock</span></li>
                         }
                         else
                         {
-                            <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+                            <li class="list-group-item text-success text-center"><span class="badge rounded-pill bg-success">Available In Stock</span></li>
                         }
-                    
-                        <div class="card-body pb-0">
-                            <div class="pl-1">
-                                <p class="card-title h5 text-white text-opacity-75 text-uppercase text-center"> @item.ShoeModel </p>
-                                <p class="card-title text-warning text-center">by <b>@item.Brand</b></p>
-                                <p class="card-title text-white text-center">Age group : <b>@item.AgeGroup</b></p>
-                                @if (item.StockStatus == SD.OutOfStock || item.StockStatus == SD.Ordered)
-                                {
-                                    <p class="card-title text-danger text-center"><b>Out Of Stock</b></p>
-                                }
-                                else
-                                {
-                                    <p class="card-title text-success text-center"><b>Available In Stock</b></p>
-                                }
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-white text-opacity-75 text-center mb-0">As low as: <span class="text-decoration-line-through">@item.ListPrice.ToString("c")</span> </p>
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-white text-opacity-75 text-center">As low as: <span>@item.Price100.ToString("c")</span> </p>
-                            </div>
-                        </div>
-                        <div>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary bg-gradient border-0 form-control">
-                                Details
-                            </a>
-                        </div>
+                        @if (item.Discount > 0)
+                        {
+                            <li class="list-group-item text-center"> <span class="badge rounded-pill bg-info">Sale @item.Discount.ToString("P0")</span></li>
+                        }
+                        <li class="list-group-item text-center">List Price : <span class=" text-decoration-line-through text-warning ">@item.ListPrice.ToString("c")</span></li>
+                        @if (item.Discount * item.ListPrice < item.Price100 && item.Discount * item.ListPrice != 0)
+                        {
+                            <li class="list-group-item text-center">As low as:  <span class="text-warning">@((item.Price - (item.Discount * item.Price)).ToString("c"))</span></li>
+                        }
+                        else
+                        {
+                            <li class="list-group-item text-center">As low as:  <span class="text-warning">@item.Price100.ToString("c")</span></li>
+                        }
+                    </ul>
+
+                    <div class="card-body">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary bg-gradient border-0 form-control">
+                            Details
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    }
+    </div>
+}
 

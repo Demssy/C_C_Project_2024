@@ -206,8 +206,13 @@
                                     <li class="list-group-item d-flex justify-content-between p-2">
                                         <div class="row container">
                                             <div class="col-8">
-
+                                                @if(item.Product.Discount > 0)
+                                                {
+                                                    <h6 class="my-0 text-white">@item.Product.ShoeModel <span class="badge bg-success">Sale @item.Product.Discount.ToString("P0")</span></h6>
+                                                }
+                                                else{
                                                 <h6 class="my-0 text-white">@item.Product.ShoeModel</h6>
+                                                }
                                                 <small class="text-white-50">Price : @item.Price.ToString("c")</small><br />
                                                 <small class="text-white-50">Quantity : @item.Count</small>
                                             </div>
@@ -244,7 +249,7 @@
                                 }
                                 if (Model.OrderHeader.OrderStatus == SD.PendingForOrderToStock)
                                 {
-                                    <button type="submit" asp-action="OrderProduct" class="btn btn-primary form-control my-1">Order Product</button>
+                                    <button type="submit" asp-action="OrderProduct" class="btn btn-primary form-control my-1">Order Product From Warehouse</button>
                                 }
                                 if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
                                 {

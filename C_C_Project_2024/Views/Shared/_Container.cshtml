@@ -10,74 +10,121 @@
 
 
 
-<span>
-    <label for="searchSort">Sort <span> By</span></label>
-    <select id="searchSort" class="tG-z">
-    <option selected value="0" aria-label="Relevance" data-label="Relevance">Relevance</option>
-    @* <option value="3" aria-label="New Arrivals" data-label="New Arrivals">New Arrivals</option> *@
-    @* <option value="4" aria-label="Best Sellers" data-label="Best Sellers">Best Sellers</option> *@
-    <option value="1" aria-label="Price: Low to High" data-label="Price: Low to High">Price: Low to High</option>
-    <option value="2" aria-label="Price: High to Low" data-label="Price: High to Low">Price: High to Low</option>
-</select>
-</span>
-
-    <div class="col-lg-3">
-        <div class="sidebar">
 
 
-
-        <select class="form-select" id="inputGender" aria-label="Gender" >
-            <option value="">Gender:</option>
-            <option value="Man">For Men</option>
-            <option value="Female">For Women</option>
-        </select>
-
-
-
-        <select class="form-select" id="inputCategory" aria-label="Category">
-            <option value="">Category:</option>
-            @foreach (var category in uniqueCategories)
-            {
-                <option value="@category">@category</option>
-            }
-        </select>
-
-
-        <h2>Brand:</h2>
-        @foreach (var brand in uniqueBrands)
-        {
-            <label><input type="checkbox" name="brand" value="@brand"> @brand</label>
-
-            <br>
-        }
-
-        <h2>Size:</h2>
-        @foreach (var size in uniqueSizes)
-        {
-            <label><input type="checkbox" name="size" value="@size"> @size</label>
-
-            <br>
-        }
-
-        <h2>Color:</h2>
-        @foreach (var color in uniqueColors)
-        {
-            <label><input type="checkbox" name="color" value="@color"> @color</label>
-
-            <br>
-        }
-
-        <select class="form-select" id="inputPrice" name="price" aria-label="Price">
-            <option value="-1">Price range:</option>
-            <option value="50">50$ and under</option>
-            <option value="100">100$ and under</option>
-            <option value="200">200$ and under</option>
-        </select>
-
+<div class="col-lg-3">
+    <div class="sidebar m-2">
+        <div>
+            <legend class="mt-4">Sort By</legend>
+            <label for="searchSort" class="form-label mt-1"></label>
+            <select class="form-select" id="searchSort">
+                <option selected value="0" aria-label="Relevance" data-label="Relevance">Relevance</option>
+                <option value="3" aria-label="New Arrivals" data-label="New Arrivals">New Arrivals</option>
+                <option value="4" aria-label="Best Sellers" data-label="Best Sellers">Best Sellers</option>
+                <option value="1" aria-label="Price: Low to High" data-label="Price: Low to High">Price: Low to High</option>
+                <option value="2" aria-label="Price: High to Low" data-label="Price: High to Low">Price: High to Low</option>
+                <option value="5" aria-label="Sales" data-label="Sales">Sales</option>
+            </select>
         </div>
+
+        <form id="priceRangeForm">
+            <div>
+                <legend class="mt-4">Sort By Price Range</legend>
+                <label for="minPriceRange" class="form-label">Minimum price: <span id="minPriceLabel"></span></label>
+                <input type="range" class="form-range" id="minPriceRange" name="minPrice" min="0" max="500" step="10" oninput="updateMinPriceLabel(this.value)">
+            </div>
+
+            <div>
+                <label for="maxPriceRange" class="form-label">Maximum price: <span id="maxPriceLabel"></span></label>
+                <input type="range" class="form-range" id="maxPriceRange" name="maxPrice" min="0" max="1000" step="10" oninput="updateMaxPriceLabel(this.value)">
+            </div>
+            <div class="mt-2" style="text-align: center">
+            <button type="button" class="btn btn-primary btn-sm text-center" onclick="sendRangeValues()">Filter</button>
+            </div>
+        </form>
+
+        
+
+       
+        <div>
+            <legend class="mt-4">Sort By Gender</legend>
+            <label for="inputGender" class="form-label mt-4"></label>
+            <select class="form-select" id="inputGender">
+                <option value="">All</option>
+                <option value="Male">Men</option>
+                <option value="Female">Women</option>
+            </select>
+        </div>
+
+       
+
+        <div>
+            <legend class="mt-4">Sort By Category</legend>
+            <label for="inputCategory" class="form-label mt-4"></label>
+            <select class="form-select" id="inputCategory">
+                <option value="">All</option>
+                @foreach (var category in uniqueCategories)
+                {
+                    <option value="@category">@category</option>
+                }
+            </select>
+        </div>
+
+
+        
+        <div class="form-check">
+            <legend class="mt-4">Brands</legend>
+            @foreach (var brand in uniqueBrands)
+            {
+
+                <label class="form-check-label"><input class=" form-check-input" type="checkbox" name="brand" value="@brand"> @brand</label>
+                <br>
+            }
+        </div>
+
+       
+
+        <div class="form-check">
+            <legend class="mt-4">Size:</legend>
+            @foreach (var size in uniqueSizes)
+            {
+
+                <label class="form-check-label"><input class=" form-check-input" type="checkbox" name="size" value="@size"> @size</label>
+                <br>
+            }
+        </div>
+
+       
+
+        <div class="form-check">
+            <legend class="mt-4">Color:</legend>
+            @foreach (var color in uniqueColors)
+            {
+
+                <label class="form-check-label"><input class=" form-check-input" type="checkbox" name="color" value="@color"> @color</label>
+                <br>
+            }
+        </div>
+
+       
+
+        <div>
+            <legend class="mt-4">Wholesale Purchase</legend>
+            <label for="inputPrice" class="form-label mt-4"></label>
+            <select class="form-select" id="inputPrice" name="price" aria-label="Price">
+                <option value="-1">Price range:</option>
+                <option value="50">50$ and under</option>
+                <option value="100">100$ and under</option>
+                <option value="200">200$ and under</option>
+            </select>
+        </div>
+
     </div>
+</div>
 <div class="col-lg-9">
     <div id="items_root" class="row jc">
         <partial name="_ProductList" />
     </div>
 </div>
+
+

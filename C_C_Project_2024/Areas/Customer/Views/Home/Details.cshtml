@@ -1,9 +1,9 @@
 ﻿@using C_C_Proj_WebStore.Utility
 @model ShoppingCard
 
-<form method="post">
+<form method="post" class="mb-5">
     <input type="hidden" asp-for="ProductId" />
-    <div class="card shadow border-0 mt-4 mb-4">
+    <div class="card shadow border-0 mt-2 mb-2">
         <div class="card-header bg-secondary bg-gradient text-light py-4">
             <div class="row">
                 <div class="col-12 text-center">
@@ -15,7 +15,7 @@
         <div class="card-body">
             <div class="py-3">
                 <div class="row">
-                    <div class="col-6 col-md-2 offset-lg-1 pb-1">
+                    <div class="col-6 col-md-2 offset-lg-1 pb-1 ">
                         <a asp-action="Index" class="btn btn-outline-primary bg-gradient mb-5 fw-semibold btn-sm text-uppercase">
                             <small>Back to home</small>
                         </a>
@@ -65,44 +65,59 @@
                     <div class="col-12 col-lg-6 offset-lg-1">
 
                         <div class="col-12 col-md-6 pb-4">
-                            <span class="badge">@Model.Product.Category.Name</span>
+                            <span class="badge bg-success">Category @Model.Product.Category.Name</span>
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-white text-opacity-50 ">Size : @Model.Product.Size.ToString()</h6>
+                            <h6 class="text-white text-opacity-50 ">Size : <span class="badge bg-primary"> @Model.Product.Size.ToString()</span></h6>
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-white text-opacity-50 ">Color : @Model.Product.Color</h6>
+                            <h6 class="text-white text-opacity-50 ">Color : <span class="badge bg-primary"> @Model.Product.Color</span></h6>
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-white text-opacity-50 ">Gender : @Model.Product.Gender</h6>
+                            <h6 class="text-white text-opacity-50 ">Gender : <span class="badge bg-primary"> @Model.Product.Gender</span></h6>
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-white text-opacity-50 ">Age Group : @Model.Product.AgeGroup</h6>
+                            <h6 class="text-white text-opacity-50 ">Age Group : <span class="badge bg-primary"> @Model.Product.AgeGroup</span></h6>
                         </div>
                         @if (Model.Product.StockStatus == SD.OutOfStock || Model.Product.StockStatus == SD.Ordered)
                         {
                             <div class="row ps-2">
-                                <h6 class="text-danger text-opacity-50 ">Out Of Stock</h6>
+                                <h6 class="text-white text-opacity-50 ">Availability : <span class="badge bg-warning"> Out of Stock</span></h6>
                             </div>
                         }
                         else
                         {
                             <div class="row ps-2">
-                                <h6 class="text-success text-opacity-50 ">Available In Stock</h6>
+                                <h6 class="text-white text-opacity-50 ">Availability : <span class="badge bg-success"> Available In Stock</span></h6>
+                            </div>
+                        }
+                        @if(Model.Product.Discount > 0){
+
+                            <div class="row ps-2">
+                                <h6 class="text-white text-opacity-50 ">
+                                    Sale : <span class="badge bg-success">
+                                    @Model.Product.Discount.ToString("P0")
+                                </span></h6>
                             </div>
                         }
                         <div class="row ps-2">
                             <h6 class="text-white text-opacity-50  pb-2">
                                 List Price:
-                                <span class="text-decoration-line-through">
+                                <span class="badge bg-primary text-decoration-line-through">
                                     @Model.Product.ListPrice.ToString("c")
                                 </span>
                             </h6>
                         </div>
-                        <div class="row text-center ps-2">
+                        <div class="row text-center ps-2 ">
                             <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
                                 <div class="text-dark text-opacity-50 fw-semibold">Quantity</div>
                             </div>
+                            @if (Model.Product.Discount > 0)
+                            {
+                                <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
+                                    <div class="text-dark text-opacity-50 fw-semibold">After Sale</div>
+                                </div>
+                            }
                             <div class="p-1 col-3 col-lg-2 bg-white border-bottom">
                                 <div class="text-dark text-opacity-50 fw-semibold">1-50</div>
                             </div>
@@ -113,10 +128,16 @@
                                 <div class="text-dark text-opacity-50 fw-semibold">100+</div>
                             </div>
                         </div>
-                        <div class="row text-center ps-2">
+                        <div class="row text-center ps-2 ">
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
                                 <div>Price</div>
                             </div>
+                            @if (Model.Product.Discount > 0)
+                            {
+                                <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
+                                    <div>@((Model.Product.Price - (Model.Product.Price * Model.Product.Discount)).ToString("c"))</div>
+                                </div>
+                            }
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
                                 <div>@Model.Product.Price.ToString("c")</div>
                             </div>
@@ -165,13 +186,11 @@
                                             class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
                                         Add to Cart
                                     </button>
+                                    <button type="submit" asp-action="BuyNow"
+                                            class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold mt-2">
+                                        Buy Now
+                                    </button>
                                 }
-
-                                <button type="submit" asp-action="BuyNow"
-                                        class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold mt-2">
-                                    Buy Now
-                                </button>
-
                             </div>
                         </div>
 
