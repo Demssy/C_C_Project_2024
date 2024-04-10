@@ -66,7 +66,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize]
         public IActionResult BuyNow(ShoppingCard shoppingCard)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -380,14 +380,16 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetFilteredProducts(string[] brands, double[] sizes, int price, string[] color, string category, string gender, int sort)
+        public IActionResult GetFilteredProducts(string[] brands, double[] sizes, int price, string[] color, string category, string gender, int sort, string s, double? minPrice, double? maxPrice)
         {
             IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
 
-            if (category != null && category.Length > 0)
+
+            if (s != null && s.Length > 0)
             {
-                productList = productList.Where(p => productList.Any(p => p.ShoeModel.Contains(category)));
+                productList = productList.Where(p => p.ShoeModel.ToLower().Contains(s.ToLower()));
             }
+
 
             if (brands != null && brands.Length > 0)
             {
@@ -431,26 +433,31 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             if (sort == 5)
                 productList = productList.OrderByDescending(p => p.Discount).Where(p => p.Discount > 0);
 
+            if (minPrice != null || maxPrice != null)
+            {
+                productList = RangeSort(minPrice, maxPrice, productList);
+            }
 
-            return PartialView("_ProductList", productList);
+
+                return PartialView("_ProductList", productList);
         }
 
-        public IActionResult RangeSort(double? minPrice, double? maxPrice)
+        public IEnumerable<Product> RangeSort(double? minPrice, double? maxPrice, IEnumerable<Product> pl)
         {
-            IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
+
             if (minPrice != null && maxPrice != null)
             {
-                productList = productList.Where(p => p.Price - (p.Price * p.Discount) >= minPrice && p.Price - (p.Price * p.Discount) <= maxPrice);
+                pl = pl.Where(p => p.Price - (p.Price * p.Discount) >= minPrice && p.Price - (p.Price * p.Discount) <= maxPrice);
             }
             if (minPrice != null && maxPrice == null)
             {
-                productList = productList.Where(p => p.Price - (p.Price * p.Discount) >= minPrice);
+                pl = pl.Where(p => p.Price - (p.Price * p.Discount) >= minPrice);
             }
             if (minPrice == null && maxPrice != null)
             {
-                productList = productList.Where(p => p.Price - (p.Price * p.Discount) <= maxPrice);
+                pl = pl.Where(p => p.Price - (p.Price * p.Discount) <= maxPrice);
             }
-            return PartialView("_ProductList", productList);
+            return pl;
         }
 
         public IActionResult GetCategories(string[] brands, double[] sizes)

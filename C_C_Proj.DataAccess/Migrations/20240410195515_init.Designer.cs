@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace C_C_Proj_WebStore.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240401103526_EditDbTables")]
-    partial class EditDbTables
+    [Migration("20240410195515_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,19 +50,55 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 1,
                             DisplayOrder = 1,
-                            Name = "Run"
+                            Name = "Sneakers"
                         },
                         new
                         {
                             Id = 2,
                             DisplayOrder = 2,
-                            Name = "Chill"
+                            Name = "Boots"
                         },
                         new
                         {
                             Id = 3,
                             DisplayOrder = 3,
-                            Name = "New"
+                            Name = "Heels"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DisplayOrder = 4,
+                            Name = "Flats"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DisplayOrder = 5,
+                            Name = "Oxfords"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DisplayOrder = 6,
+                            Name = "Slippers"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DisplayOrder = 7,
+                            Name = "Boat Shoes"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            DisplayOrder = 8,
+                            Name = "Sandals"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            DisplayOrder = 9,
+                            Name = "Athletic Shoes"
                         });
                 });
 
@@ -268,6 +304,9 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double>("Discount")
+                        .HasColumnType("float");
+
                     b.Property<string>("Gender")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -284,6 +323,9 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Property<double>("Price50")
                         .HasColumnType("float");
 
+                    b.Property<int>("PurchasesCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("ShoeModel")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -293,6 +335,9 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
 
                     b.Property<int>("StockCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("StockStatus")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -309,14 +354,17 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             CategoryId = 1,
                             Color = "White",
                             Description = "Description1",
+                            Discount = 0.0,
                             Gender = "Male",
                             ListPrice = 100.0,
                             Price = 95.0,
                             Price100 = 80.0,
                             Price50 = 90.0,
+                            PurchasesCount = 0,
                             ShoeModel = "Pegasus",
                             Size = 41.5,
-                            StockCount = 100
+                            StockCount = 100,
+                            StockStatus = "AvailableInStock"
                         },
                         new
                         {
@@ -326,31 +374,137 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             CategoryId = 2,
                             Color = "Black",
                             Description = "Description2",
+                            Discount = 0.0,
                             Gender = "Male",
                             ListPrice = 100.0,
                             Price = 95.0,
                             Price100 = 80.0,
                             Price50 = 90.0,
+                            PurchasesCount = 0,
                             ShoeModel = "Easy",
                             Size = 45.5,
-                            StockCount = 200
+                            StockCount = 200,
+                            StockStatus = "AvailableInStock"
                         },
                         new
                         {
                             Id = 3,
                             AgeGroup = "Adult",
-                            Brand = "Reebock",
+                            Brand = "Reebok",
                             CategoryId = 3,
                             Color = "Blue",
                             Description = "Description3",
+                            Discount = 0.0,
                             Gender = "Female",
                             ListPrice = 100.0,
                             Price = 95.0,
                             Price100 = 80.0,
                             Price50 = 90.0,
+                            PurchasesCount = 0,
                             ShoeModel = "Wild Horse",
                             Size = 38.0,
-                            StockCount = 300
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AgeGroup = "Adult",
+                            Brand = "Converse",
+                            CategoryId = 5,
+                            Color = "White",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Unisex",
+                            ListPrice = 120.0,
+                            Price = 33.0,
+                            Price100 = 11.0,
+                            Price50 = 22.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Cons",
+                            Size = 38.0,
+                            StockCount = 20,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AgeGroup = "Kid",
+                            Brand = "Jordan",
+                            CategoryId = 8,
+                            Color = "Blue",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Female",
+                            ListPrice = 500.0,
+                            Price = 299.0,
+                            Price100 = 99.0,
+                            Price50 = 199.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Air Force",
+                            Size = 43.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AgeGroup = "Adult",
+                            Brand = "Vans",
+                            CategoryId = 4,
+                            Color = "Black",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Male",
+                            ListPrice = 999.0,
+                            Price = 900.0,
+                            Price100 = 399.0,
+                            Price50 = 559.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Vans x Harry Potter",
+                            Size = 38.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AgeGroup = "Adult",
+                            Brand = "Crocs",
+                            CategoryId = 7,
+                            Color = "Red",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Female",
+                            ListPrice = 22.0,
+                            Price = 21.0,
+                            Price100 = 11.0,
+                            Price50 = 15.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Classic Clog",
+                            Size = 38.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AgeGroup = "Adult",
+                            Brand = "New Balance",
+                            CategoryId = 2,
+                            Color = "Purple",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Female",
+                            ListPrice = 356.0,
+                            Price = 299.0,
+                            Price100 = 99.0,
+                            Price50 = 199.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "x Aimé Leon Dore 860v2",
+                            Size = 46.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
                         });
                 });
 
@@ -400,6 +554,39 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ShoppingCards");
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.UserCreditCard", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<byte[]>("EncryptedCVV")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("EncryptedCardNumber")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("ExpiryMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExpiryYear")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("UserCreditCards");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -707,6 +894,17 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("C_C_Proj_WebStore.Models.UserCreditCard", b =>
+                {
+                    b.HasOne("C_C_Proj_WebStore.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

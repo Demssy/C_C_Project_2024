@@ -165,7 +165,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             }
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
-                var domain = "https://localhost:7162/";
+                var domain = Request.Scheme + "://" + Request.Host.Value+"/";
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = new List<string>

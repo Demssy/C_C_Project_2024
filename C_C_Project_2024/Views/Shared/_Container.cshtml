@@ -13,13 +13,13 @@
 
 
 <div class="col-lg-3">
-    <div class="sidebar m-2 mb-5">
-        <div>
-            <form class="d-flex mt-2">
-                <input class="form-control me-2" type="text" name="search_box" id="search_box" placeholder="Search by Model.." aria-label="Search">
-                <button class="btn btn-outline-success" id="search_b">Search</button>
-            </form>
-        </div>
+    <div class="sidebar m-2">
+
+            <div class="d-flex m-2">
+                    <input class="form-control me-2" id="searchField" type="search" placeholder="Search By Model.." aria-label="Search">
+                    <button class="btn btn-outline-success" id="buttonID" name="bbb" type="submit">Search</button>
+            </div>
+        
         <div>
             <legend class="mt-4">Sort By</legend>
             <label for="searchSort" class="form-label mt-1"></label>
@@ -45,7 +45,7 @@
                 <input type="range" class="form-range" id="maxPriceRange" name="maxPrice" min="0" max="1000" step="10" oninput="updateMaxPriceLabel(this.value)">
             </div>
             <div class="mt-2" style="text-align: center">
-            <button type="button" class="btn btn-primary btn-sm text-center" onclick="sendRangeValues()">Filter</button>
+                <button type="button" class="btn btn-primary btn-sm text-center" onclick="sendR()">Filter</button>
             </div>
         </form>
 

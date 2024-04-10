@@ -187,7 +187,23 @@
 </form>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons lists  table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough  | align lineheight | checklist numlist bullist indent outdent',
+        });
+    </script>
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        function appendPercentageSymbol(inputElement) {
+            if (!inputElement.value.includes('%')) {
+                inputElement.value = inputElement.value + '%';
+            }
+        }
+    </script>
     <script>
         function validateInput() {
             if (document.getElementById("name").value == "") {
