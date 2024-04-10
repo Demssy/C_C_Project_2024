@@ -111,6 +111,7 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
         {
             var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
             var orderDetail = _unitOfWork.OrderDetail.Get(o => o.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
+            orderDetail.Product = _unitOfWork.Product.Get(u => u.Id == orderDetail.ProductId, includeProperties: "Category");
             
            
             return View(orderDetail);

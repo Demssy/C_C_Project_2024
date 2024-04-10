@@ -6,8 +6,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 {
@@ -30,17 +32,6 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
             return View(productList);
         }
-
-        //public IActionResult NotyfyMe(int id)
-        //{
-        //    ShoppingCard shoppingCard = new()
-        //    {
-        //        Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category,ProductImages"),
-        //        ProductId = id,
-        //        Count = 1
-        //    };
-        //    return View();
-        //}
 
 
         public IActionResult NotifyMe(ShoppingCard shoppingCard)
@@ -80,29 +71,47 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ShoppingCard Card = new()
+            ShoppinCardSingleVM shoppingCardSingleVM = new ShoppinCardSingleVM
             {
-                Product = _unitOfWork.Product.Get(u => u.Id == shoppingCard.ProductId, includeProperties: "Category,ProductImages"),
-                ProductId = shoppingCard.ProductId,
-                Count = shoppingCard.Count,
+                ShoppingCard = new()
+                {
+                    Product = _unitOfWork.Product.Get(u => u.Id == shoppingCard.ProductId, includeProperties: "Category,ProductImages"),
+                    ProductId = shoppingCard.ProductId,
+                    Count = shoppingCard.Count,
+                    ApplicationUserId = claim,
+                    ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim)
+                },
+            UserCreditCard = _unitOfWork.UserCreditCard.Get(u => u.ApplicationUserId == claim) ?? new UserCreditCard
+            {
                 ApplicationUserId = claim,
                 ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim)
-            };
-            Card.Price = CalculateOrderTotal(Card);
-            if (Card.Count > Card.Product.StockCount)
+            }
+        };
+            //ShoppingCard Card = new()
+            //{
+            //    Product = _unitOfWork.Product.Get(u => u.Id == shoppingCard.ProductId, includeProperties: "Category,ProductImages"),
+            //    ProductId = shoppingCard.ProductId,
+            //    Count = shoppingCard.Count,
+            //    ApplicationUserId = claim,
+            //    ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim)
+            //};
+            //UserCreditCard userCreditCard = _unitOfWork.UserCreditCard.Get(u => u.ApplicationUserId == claim);
+
+            shoppingCardSingleVM.ShoppingCard.Price = CalculateOrderTotal(shoppingCardSingleVM.ShoppingCard);
+            if (shoppingCardSingleVM.ShoppingCard.Count > shoppingCardSingleVM.ShoppingCard.Product.StockCount)
             {
                 TempData["Error"] = "Not enough in stock";
                 return RedirectToAction(nameof(Index));
             }
             else
             {
-                return View(Card);
+                return View(shoppingCardSingleVM);
             }
         }
 
 
         [HttpPost]
-        public IActionResult BuyNowPOST(ShoppingCard shoppingCard)
+        public IActionResult BuyNowPOST(ShoppinCardSingleVM shoppingCardSingleVm)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -123,15 +132,31 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
             ShoppingCard Card = new()
             {
-                Product = _unitOfWork.Product.Get(u => u.Id == shoppingCard.ProductId, includeProperties: "Category,ProductImages"),
-                ProductId = shoppingCard.ProductId,
-                Count = shoppingCard.Count,
+                Product = _unitOfWork.Product.Get(u => u.Id == shoppingCardSingleVm.ShoppingCard.ProductId, includeProperties: "Category,ProductImages"),
+                ProductId = shoppingCardSingleVm.ShoppingCard.ProductId,
+                Count = shoppingCardSingleVm.ShoppingCard.Count,
                 ApplicationUserId = claim,
                 ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim)
             };
             Card.Price = CalculateOrderTotal(Card);
             //ShoppingCard.Price = CalculateOrderTotal(shoppingCard);
             Product productFromDb = _unitOfWork.Product.Get(u => u.Id == Card.ProductId, includeProperties: "Category,ProductImages");
+            UserCreditCard userCreditCardFromDb = _unitOfWork.UserCreditCard.Get(u => u.ApplicationUserId == claim);
+            if (userCreditCardFromDb == null)
+            {
+                shoppingCardSingleVm.UserCreditCard.key = new byte[16];
+                shoppingCardSingleVm.UserCreditCard.iv = new byte[16];
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(shoppingCardSingleVm.UserCreditCard.key);
+                    rng.GetBytes(shoppingCardSingleVm.UserCreditCard.iv);
+                }
+                shoppingCardSingleVm.UserCreditCard.ApplicationUserId = applicationUser.Id;
+                shoppingCardSingleVm.UserCreditCard.EncryptedCardNumber = Encrypt(plainText: shoppingCardSingleVm.UserCreditCard.CardNumber, shoppingCardSingleVm.UserCreditCard.key, shoppingCardSingleVm.UserCreditCard.iv);
+                shoppingCardSingleVm.UserCreditCard.EncryptedCVV = Encrypt(shoppingCardSingleVm.UserCreditCard.CVV, shoppingCardSingleVm.UserCreditCard.key, shoppingCardSingleVm.UserCreditCard.iv);
+                _unitOfWork.UserCreditCard.Add(shoppingCardSingleVm.UserCreditCard);
+                _unitOfWork.Save();
+            }
 
 
             orderHeader.OrderTotal += Card.Price * Card.Count;
@@ -217,6 +242,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
 
             OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+            OrderDetail orderDetail = _unitOfWork.OrderDetail.Get(u => u.OrderHeaderId == id);
             if (orderHeader == null)
             {
                 HttpContext.Session.Clear();
@@ -240,8 +266,8 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 //	orderHeader.PaymentStatus = SD.PaymentStatusRejected;
                 //}
             }
-
-            return View(id);
+            Product product = _unitOfWork.Product.Get(u => u.Id == orderDetail.ProductId, includeProperties: "Category");
+            return View(product);
         }
 
         private double CalculateOrderTotal(ShoppingCard shoppingCard)
@@ -450,6 +476,47 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public byte[] Encrypt(string plainText, byte[] key, byte[] iv)
+        {
+            byte[] cipheredtext;
+            using (Aes aesAlg = Aes.Create())
+            {
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(key, iv);
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                        cipheredtext = msEncrypt.ToArray();
+                    }
+                }
+            }
+            return cipheredtext;
+        }
+
+
+        public string Decrypt(byte[] cipherText, byte[] key, byte[] iv)
+        {
+            string plaintext = String.Empty;
+            using (Aes aesAlg = Aes.Create())
+            {
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(key, iv);
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return plaintext;
         }
     }
 }

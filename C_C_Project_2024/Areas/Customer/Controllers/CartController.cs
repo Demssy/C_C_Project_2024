@@ -206,6 +206,8 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                     if (item.Product.StockCount <= 0)
                     {
                         item.Product.StockStatus = SD.OutOfStock;
+                        return RedirectToAction(nameof(Index));
+                        TempData["Error"] = "Not enough in stock";
                     }
                     _unitOfWork.Product.Update(item.Product);
                     _unitOfWork.Save();
@@ -219,6 +221,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
 
             OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+            OrderDetail orderDetail = _unitOfWork.OrderDetail.Get(u => u.OrderHeaderId == id);
             if (orderHeader == null)
             {
                 HttpContext.Session.Clear();
@@ -242,10 +245,12 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 //	orderHeader.PaymentStatus = SD.PaymentStatusRejected;
                 //}
             }
-            List<ShoppingCard> shoppingCardList = _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
+            
+            List<ShoppingCard> shoppingCardList = _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId, includeProperties: "Product").ToList();
             _unitOfWork.ShoppingCard.RemoveRange(shoppingCardList);
             _unitOfWork.Save();
-            return View(id);
+            shoppingCardList.ForEach(u => u.Product = _unitOfWork.Product.Get(u => u.Id == u.Id, includeProperties:"Category"));
+            return View(shoppingCardList);
         }
 
         public IActionResult Plus(int cartId)

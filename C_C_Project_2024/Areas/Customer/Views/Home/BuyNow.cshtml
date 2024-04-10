@@ -1,7 +1,8 @@
-﻿@model ShoppingCard
+﻿
+@model ShoppinCardSingleVM
 
 
-<form method="post">
+@* <form method="post">
     <br />
     <input type="hidden" asp-for="ProductId" />
     <input type="hidden" asp-for="@Model.Count" />
@@ -144,4 +145,286 @@
             </div>
         </div>
     </div>
+</form> *@
+<form method="post" class="mb-5 flex" style="margin-bottom:auto;">
+    <input type="hidden" asp-for="@Model.ShoppingCard.ProductId"/>
+    <input type="hidden" asp-for="@Model.ShoppingCard.Count" />
+    <br />
+    <div class="container mb-6">
+        <div class="card shadow border-0 mb-6">
+
+            <div class="card-header bg-secondary bg-gradient text-light ml-0 py-4">
+                <div class="row px-4">
+                    <div class="col-6">
+                        <h5 class="pt-2 text-white">
+                            Order Summary
+                        </h5>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a asp-action="Index" btn-outline-danger btn-sm">Back to Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container rounded p-2">
+                    <div class="row justify-between mb-5">
+                        <div class="col-12 col-lg-6 pb-4">
+                            <div class="row">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-info">Shipping Details:</span>
+                                </h4>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Name</label>
+                                </div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.ShoppingCard.ApplicationUser.Name" id="name" type="text" class="form-control" />
+                                    <span asp-validation-for="@Model.ShoppingCard.ApplicationUser.Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Phone</label>
+                                </div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.ShoppingCard.ApplicationUser.PhoneNumber" type="text" id="phone" class="form-control" />
+                                    <span asp-validation-for="@Model.ShoppingCard.ApplicationUser.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Street Address</label>
+                                </div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.ShoppingCard.ApplicationUser.StreetAdress" type="text" id="streetAdress" class="form-control" />
+                                    <span asp-validation-for="@Model.ShoppingCard.ApplicationUser.StreetAdress" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>City</label>
+                                </div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.ShoppingCard.ApplicationUser.City" type="text" id="city" class="form-control" />
+                                    <span asp-validation-for="@Model.ShoppingCard.ApplicationUser.City" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>State</label>
+                                </div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.ShoppingCard.ApplicationUser.State" type="text" id="country" class="form-control" />
+                                    <span asp-validation-for="@Model.ShoppingCard.ApplicationUser.State" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Postal Code</label>
+                                </div>
+                                <div class="col-9">
+                                    <input asp-for="@Model.ShoppingCard.ApplicationUser.PostalAdress" type="text" id="pcode" class="form-control" />
+                                    <span asp-validation-for="@Model.ShoppingCard.ApplicationUser.PostalAdress" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-5 pb-4">
+                            <div class="row">
+                                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-info">Payment Details:</span>
+                                </h4>
+                            </div>
+
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Card Number</label>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="UserCreditCard.CardNumber" type="text" id="cnum" class="form-control" />
+                                    <span asp-validation-for="UserCreditCard.CardNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Expire Year</label>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="UserCreditCard.ExpiryYear" type="text" id="eyear" class="form-control" />
+                                    <span asp-validation-for="UserCreditCard.ExpiryYear" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>Expire Month</label>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="UserCreditCard.ExpiryMonth" type="text" id="emonth" class="form-control" />
+                                    <span asp-validation-for="UserCreditCard.ExpiryMonth" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">
+                                    <label>CVV</label>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="UserCreditCard.CVV" id="cvv" type="text" class="form-control" />
+                                    <span asp-validation-for="UserCreditCard.CVV" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row justify-center">
+                        <div class="col-12 col-lg-5">
+                            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="text-info">Order Summary:</span>
+                            </h4>
+                            <ul class="list-group mb-3">
+                               
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <div>
+                                        @if (@Model.ShoppingCard.Product.Discount > 0)
+                                            {
+                                            <h6 class="my-0 text-white">@Model.ShoppingCard.Product.ShoeModel <span class="badge bg-success">Sale @Model.ShoppingCard.Product.Discount.ToString("P0")</span></h6>
+                                            <small class="text-muted">Quantity: @Model.ShoppingCard.Count</small>
+                                            }
+                                            else
+                                            {
+                                            <h6 class="my-0 text-white">@Model.ShoppingCard.Product.ShoeModel </h6>
+                                            <small class="text-muted">Quantity: @Model.ShoppingCard.Count</small>
+                                            }
+                                        </div>
+                                    @if (Model.ShoppingCard.Product.Discount > 0)
+                                        {
+                                        <span class="text-muted">@Model.ShoppingCard.Price.ToString("c")</span>
+                                        }
+                                        else
+                                        {
+                                        <span class="text-muted">@((Model.ShoppingCard.Price * Model.ShoppingCard.Count).ToString("c"))</span>
+                                        }
+
+                                    </li>
+                                
+                                <li class="list-group-item d-flex justify-content-between bg-light">
+                                    <small class="text-info">Total (ILS)</small>
+                                    <strong class="text-info">@((Model.ShoppingCard.Price * Model.ShoppingCard.Count).ToString("c"))</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-12 col-md-8 pt-2">
+                        <p style="color:maroon; font-size:14px;">
+                            Estimate Arrival Date:
+                            @DateTime.Now.AddDays(7).ToShortDateString() - @DateTime.Now.AddDays(14).ToShortDateString()
+                        </p>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <button type="submit" onclick="return validateInput()" asp-action="BuyNowPOST" class="btn btn-primary form-control">Place Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function validateInput() {
+            if (document.getElementById("name").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Please enter Name',
+                });
+                return false;
+            }
+            if (document.getElementById("phone").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Please enter Phone Number',
+                });
+                return false;
+            }
+            if (document.getElementById("streetAdress").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Please enter Street Adress',
+                });
+                return false;
+            }
+            if (document.getElementById("country").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Please enter Country',
+                });
+                return false;
+            }
+            if (document.getElementById("pcode").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Please enter Postal Code',
+                });
+                return false;
+            }
+            if (document.getElementById("city").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Please enter City',
+                });
+                return false;
+            }
+            if (document.getElementById("email").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Please enter Email',
+                });
+                return false;
+            }
+            if (document.getElementById("cnum").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Invalid input for Credit Card',
+                });
+                return false;
+            }
+            if (document.getElementById("eyear").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Invalid input for Expiry Year',
+                });
+                return false;
+            }
+            if (document.getElementById("emonth").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Invalid input for Expiry Month',
+                });
+                return false;
+            }
+            if (document.getElementById("cvv").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops...',
+                    text: 'Invalid input for CVV',
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

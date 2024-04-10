@@ -40,9 +40,9 @@ namespace C_C_Proj_WebStore.Models
         [StringLength(3, ErrorMessage = "Invalid Input")]
         public string CVV { get; set; }
 
-        [NotMapped]
+        [Required]
         public byte[] key { get; set; }
-        [NotMapped]
+        [Required]
         public byte[] iv { get; set; }
 
 

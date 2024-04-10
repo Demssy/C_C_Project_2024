@@ -1,6 +1,6 @@
 ﻿@model OrderDetail
 @using C_C_Proj_WebStore.Utility
-<form method="post">
+@* <form method="post">
     <input asp-for="OrderHeaderId" hidden />
     <br />
     <div class="container">
@@ -41,7 +41,7 @@
                                                     {
                                                         <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
                                                     }
-                                                    @*  <img src="@item.ImageUrl" class="card-img-top rounded"/>  *@
+                                                    @*  <img src="@item.ImageUrl" class="card-img-top rounded"/>  
                                                     <div class="card-body pb-0">
                                                         <div class="pl-1">
                                                             <p class="card-title h5 text-white text-opacity-75 text-uppercase text-center"> @Model.Product.ShoeModel </p>
@@ -80,6 +80,111 @@
                             </div>
                         </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form> *@
+<form method="post" class="mb-4">
+    <input asp-for="OrderHeaderId" hidden />
+    <br />
+    <div class="container">
+        <div class="card">
+            <div class="card-header bg-dark text-light ml-0">
+                <div class="container row">
+                    <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                        Order Product
+                    </div>
+                    <div class="col-12 col-md-4 offset-md-2 text-right">
+                        <a asp-action="Index" class="btn btn-outline-info form-control btn-sm">Back to Products</a>
+                    </div>
+                </div>
+            </div>
+            <label class="btn btn-outline-primary my-2 col-4 offset-4">Order Status - @Model.Product.StockStatus</label>
+            <div class="col-lg-4 offset-lg-4 col-sm-6 animateWithBounce">
+                <div class="row p-2">
+                    <div class="col-12 p-1">
+                        <div class="card mb-3 border-0  border-top border-0 rounded">
+                            <h3 class="card-header">@Model.Product.ShoeModel</h3>
+                            <div class="card-body">
+                                <h5 class="card-title text-primary"><b>By @Model.Product.Brand</b></h5>
+                            </div>
+                            <div class="card-img">
+
+                                @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 0)
+                                {
+                                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-indicators">
+
+                                            @foreach (var imageWithIndex in Model.Product.ProductImages.Select((image, index) => new { ProductImage = image, Index = index }))
+                                            {
+                                                <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="@imageWithIndex.Index"
+                                                        class="@(imageWithIndex.Index==0?"active":"")" aria-current="true" aria-label="Slide 1"></button>
+
+                                            }
+
+
+                                        </div>
+                                        <div class="carousel-inner">
+                                            @foreach (var imageWithIndex in Model.Product.ProductImages.Select((image, index) => new { ProductImage = image, Index = index }))
+                                            {
+                                                <div class="@(imageWithIndex.Index==0?"carousel-item active":"carousel-item")">
+                                                    <img src="@imageWithIndex.ProductImage.ImageUrl" class=" d-block w-100" alt="...">
+
+                                                </div>
+                                            }
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                }
+
+                                else
+                                {
+                                    <img src="https://placehold.co/500x600/png" class="card-img-top rounded border-1 rounded d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle" />
+                                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                                }
+
+                            </div>
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-center">  <span class="badge rounded-pill bg-primary">Category @Model.Product.Category.Name</span></li>
+                                @if (Model.Product.StockStatus == SD.OutOfStock || Model.Product.StockStatus == SD.Ordered)
+                                {
+                                    <li class="list-group-item text-danger text-center"><span class="badge rounded-pill bg-warning">Out Of Stock</span></li>
+                                }
+                                else
+                                {
+                                    <li class="list-group-item text-success text-center"><span class="badge rounded-pill bg-success">Available In Stock</span></li>
+                                }
+                                @if (Model.Product.Discount > 0)
+                                {
+                                    <li class="list-group-item text-center"> <span class="badge rounded-pill bg-info">Sale @Model.Product.Discount.ToString("P0")</span></li>
+                                }
+                                <li class="list-group-item text-center">Stock Count : <b>@Model.Product.StockCount</b></li>
+                            </ul>
+
+                            <div class="card-body">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold"
+                                          id="inputGroup-sizing-default">
+                                        Count
+                                    </span>
+                                    <input asp-for="@Model.Count" type="number" value="1" class="form-control text-end"
+                                           aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" style="padding: 2px 12px; font-size: 16px; line-height: 16px;" />
+                                </div>
+                                <div class="row">
+                                    <button type="submit" asp-action="UpdateProductStock" class="col-6 offset-3 btn btn-primary bg-gradient py-2 text-uppercase fw-semibold">Order Product From Warehouse</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
