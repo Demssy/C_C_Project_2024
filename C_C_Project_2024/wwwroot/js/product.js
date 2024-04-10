@@ -25,15 +25,15 @@ function loadDataTable() {
                 data: 'id',
                 "render": function (data) {
                     return `
-                    <div class="w-75 btn-group" role="group">
-                        <a href="/Admin/Product/Upsert/${data}" class="btn btn-primary mx-2 text-white" style="cursor:pointer; width:80px; height:60px;">
-                            <i class="bi bi-pencil"></i> Edit </a>
+                    <div class="btn-group" role="group" style="margin: 0 auto;">
+                        <a href="/Admin/Product/Upsert/${data}" class="btn btn-primary text-white table_icon_btn">
+                            <i class="bi bi-pencil" style="margin-right: 3px;"></i> Edit </a>
                         &nbsp;
-                        <a onClick=Delete('/Admin/Product/Delete/${data}') class="btn btn-danger text-white" style="cursor:pointer; width:80px;  height:60px;">
-                            <i class="bi bi-trash"></i> Delete </a>
+                        <a onClick=Delete('/Admin/Product/Delete/${data}') class="btn btn-danger text-white table_icon_btn">
+                            <i class="bi bi-trash" style="margin-right: 2px;"></i> Delete </a>
                             &nbsp;
-                        <a href="/Admin/Product/Warehouse/${data}" class="btn btn-success text-white " style="cursor:pointer; width:110px; margin-left:5px; height:60px;">
-                            <i class="bi bi-archive"></i> Warehouse </a>
+                        <a href="/Admin/Product/Warehouse/${data}" class="btn btn-success text-white table_icon_btn">
+                            <i class="bi bi-archive" style="margin-right: 6px;"></i> Warehouse </a>
                     </div>
                     `;
                 },

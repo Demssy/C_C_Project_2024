@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,8 +27,6 @@ namespace C_C_Proj_WebStore.Utility
         public const string AvailableInStock = "AvailableInStock";
         public const string PendingForOrderToStock = "PendingForOrderToStock";
 
-
-
         public const string PaymentStatusPending = "Pending";
         public const string PaymentStatusApproved = "Approved";
         public const string PaymentStatusDelayedPayment = "ApprovedForDelayedPayment";
@@ -36,4 +35,6 @@ namespace C_C_Proj_WebStore.Utility
 
         public const string SessionCart = "ShoppingCartSession";
     }
+
+
 }

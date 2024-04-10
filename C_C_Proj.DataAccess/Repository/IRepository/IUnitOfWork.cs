@@ -16,6 +16,7 @@ namespace C_C_Proj_WebStore.DataAccess.Repository.IRepository
         IOrderHeaderRepository OrderHeader { get; }
         IOrderDetailRepository OrderDetail { get; }
         IProductImageRepository ProductImage { get; }
+        IUserCreditCardRepository UserCreditCard { get; }
         void Save();
     }
 }

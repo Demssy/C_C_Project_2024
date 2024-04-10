@@ -10,5 +10,6 @@ namespace C_C_Proj_WebStore.Models.ViewModels
     {
         public IEnumerable<ShoppingCard> ShoppingCartList { get; set; }
         public OrderHeader OrderHeader { get; set; }
+        public UserCreditCard UserCreditCard { get; set; }
     }
 }
