@@ -47,19 +47,55 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 1,
                             DisplayOrder = 1,
-                            Name = "Run"
+                            Name = "Sneakers"
                         },
                         new
                         {
                             Id = 2,
                             DisplayOrder = 2,
-                            Name = "Chill"
+                            Name = "Boots"
                         },
                         new
                         {
                             Id = 3,
                             DisplayOrder = 3,
-                            Name = "New"
+                            Name = "Heels"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DisplayOrder = 4,
+                            Name = "Flats"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DisplayOrder = 5,
+                            Name = "Oxfords"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DisplayOrder = 6,
+                            Name = "Slippers"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DisplayOrder = 7,
+                            Name = "Boat Shoes"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            DisplayOrder = 8,
+                            Name = "Sandals"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            DisplayOrder = 9,
+                            Name = "Athletic Shoes"
                         });
                 });
 
@@ -351,7 +387,7 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                         {
                             Id = 3,
                             AgeGroup = "Adult",
-                            Brand = "Reebock",
+                            Brand = "Reebok",
                             CategoryId = 3,
                             Color = "Blue",
                             Description = "Description3",
@@ -364,6 +400,106 @@ namespace C_C_Proj_WebStore.DataAccess.Migrations
                             PurchasesCount = 0,
                             ShoeModel = "Wild Horse",
                             Size = 38.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AgeGroup = "Adult",
+                            Brand = "Converse",
+                            CategoryId = 5,
+                            Color = "White",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Unisex",
+                            ListPrice = 120.0,
+                            Price = 33.0,
+                            Price100 = 11.0,
+                            Price50 = 22.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Cons",
+                            Size = 38.0,
+                            StockCount = 20,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AgeGroup = "Kid",
+                            Brand = "Jordan",
+                            CategoryId = 8,
+                            Color = "Blue",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Female",
+                            ListPrice = 500.0,
+                            Price = 299.0,
+                            Price100 = 99.0,
+                            Price50 = 199.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Air Force",
+                            Size = 43.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AgeGroup = "Adult",
+                            Brand = "Vans",
+                            CategoryId = 4,
+                            Color = "Black",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Male",
+                            ListPrice = 999.0,
+                            Price = 900.0,
+                            Price100 = 399.0,
+                            Price50 = 559.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Vans x Harry Potter",
+                            Size = 38.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AgeGroup = "Adult",
+                            Brand = "Crocs",
+                            CategoryId = 7,
+                            Color = "Red",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Female",
+                            ListPrice = 22.0,
+                            Price = 21.0,
+                            Price100 = 11.0,
+                            Price50 = 15.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "Classic Clog",
+                            Size = 38.0,
+                            StockCount = 300,
+                            StockStatus = "AvailableInStock"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AgeGroup = "Adult",
+                            Brand = "New Balance",
+                            CategoryId = 2,
+                            Color = "Purple",
+                            Description = "Description3",
+                            Discount = 0.0,
+                            Gender = "Female",
+                            ListPrice = 356.0,
+                            Price = 299.0,
+                            Price100 = 99.0,
+                            Price50 = 199.0,
+                            PurchasesCount = 0,
+                            ShoeModel = "x Aimé Leon Dore",
+                            Size = 46.0,
                             StockCount = 300,
                             StockStatus = "AvailableInStock"
                         });

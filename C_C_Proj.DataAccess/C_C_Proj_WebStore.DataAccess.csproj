@@ -21,4 +21,8 @@
     <ProjectReference Include="..\C_C_Proj.Utility\C_C_Proj_WebStore.Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

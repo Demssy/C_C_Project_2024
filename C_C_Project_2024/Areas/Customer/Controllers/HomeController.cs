@@ -75,7 +75,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize]
         public IActionResult BuyNow(ShoppingCard shoppingCard)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -358,10 +358,6 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
             IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
 
-            if (category != null && category.Length > 0)
-            {
-                productList = productList.Where(p => productList.Any(p => p.ShoeModel.Contains(category)));
-            }
 
             if (s != null && s.Length > 0)
             {

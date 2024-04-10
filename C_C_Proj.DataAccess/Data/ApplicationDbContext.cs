@@ -29,9 +29,15 @@ namespace C_C_Proj_WebStore.DataAccess.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Category>().HasData(
-            new Category { Id = 1, Name = "Run", DisplayOrder = 1 },
-            new Category { Id = 2, Name = "Chill", DisplayOrder = 2 },
-            new Category { Id = 3, Name = "New", DisplayOrder = 3 }
+            new Category { Id = 1, Name = "Sneakers", DisplayOrder = 1 },
+            new Category { Id = 2, Name = "Boots", DisplayOrder = 2 },
+            new Category { Id = 3, Name = "Heels", DisplayOrder = 3 },
+            new Category { Id = 4, Name = "Flats", DisplayOrder = 4 },
+            new Category { Id = 5, Name = "Oxfords", DisplayOrder = 5 },
+            new Category { Id = 6, Name = "Slippers", DisplayOrder = 6 },
+            new Category { Id = 7, Name = "Boat Shoes", DisplayOrder = 7 },
+            new Category { Id = 8, Name = "Sandals", DisplayOrder = 8 },
+            new Category { Id = 9, Name = "Athletic Shoes", DisplayOrder = 9 }
             );
 
             modelBuilder.Entity<Company>().HasData(
@@ -118,7 +124,7 @@ namespace C_C_Proj_WebStore.DataAccess.Data
             {
                 Id = 3,
                 ShoeModel = "Wild Horse",
-                Brand = "Reebock",
+                Brand = "Reebok",
                 ListPrice = 100,
                 Price = 95,
                 Price50 = 90,
@@ -134,6 +140,109 @@ namespace C_C_Proj_WebStore.DataAccess.Data
                 PurchasesCount = 0,
                 Discount = 0
 
+            },
+            new Product
+            {
+                Id = 4,
+                ShoeModel = "Cons",
+                Brand = "Converse",
+                ListPrice = 120,
+                Price = 33,
+                Price50 = 22,
+                Price100 = 11,
+                Description = "Description3",
+                Size = 38,
+                Color = "White",
+                Gender = "Unisex",
+                CategoryId = 5,
+                AgeGroup = "Adult",
+                StockCount = 20,
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
+
+            },
+            new Product
+            {
+                Id = 5,
+                ShoeModel = "Air Force",
+                Brand = "Jordan",
+                ListPrice = 500,
+                Price = 299,
+                Price50 = 199,
+                Price100 = 99,
+                Description = "Description3",
+                Size = 43,
+                Color = "Blue",
+                Gender = "Female",
+                CategoryId = 8,
+                AgeGroup = "Kid",
+                StockCount = 300,
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
+
+            },
+            new Product
+            {
+                Id = 6,
+                ShoeModel = "Vans x Harry Potter",
+                Brand = "Vans",
+                ListPrice = 999,
+                Price = 900,
+                Price50 = 559,
+                Price100 = 399,
+                Description = "Description3",
+                Size = 38,
+                Color = "Black",
+                Gender = "Male",
+                CategoryId = 4,
+                AgeGroup = "Adult",
+                StockCount = 300,
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
+
+            },
+            new Product
+            {
+                Id = 7,
+                ShoeModel = "Classic Clog",
+                Brand = "Crocs",
+                ListPrice = 22,
+                Price = 21,
+                Price50 = 15,
+                Price100 = 11,
+                Description = "Description3",
+                Size = 38,
+                Color = "Red",
+                Gender = "Female",
+                CategoryId = 7,
+                AgeGroup = "Adult",
+                StockCount = 300,
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
+            },
+            new Product
+            {
+                Id = 8,
+                ShoeModel = "x Aimé Leon Dore",
+                Brand = "New Balance",
+                ListPrice = 356,
+                Price = 299,
+                Price50 = 199,
+                Price100 = 99,
+                Description = "Description3",
+                Size = 46,
+                Color = "Purple",
+                Gender = "Female",
+                CategoryId = 2,
+                AgeGroup = "Adult",
+                StockCount = 300,
+                StockStatus = "AvailableInStock",
+                PurchasesCount = 0,
+                Discount = 0
             }
             );
         }
