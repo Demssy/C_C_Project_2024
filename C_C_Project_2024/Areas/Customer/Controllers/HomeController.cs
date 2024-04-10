@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 
 namespace C_C_Proj_WebStore.Areas.Customer.Controllers
@@ -357,6 +358,10 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
         {
             IEnumerable<Product> productList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages");
 
+            if (category != null && category.Length > 0)
+            {
+                productList = productList.Where(p => productList.Any(p => p.ShoeModel.Contains(category)));
+            }
 
             if (s != null && s.Length > 0)
             {

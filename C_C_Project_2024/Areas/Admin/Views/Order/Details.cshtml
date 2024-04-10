@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-header bg-dark text-light ml-0">
                 <div class="container row">
-                    <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                    <div class="col-12 d-none d-md-block col-md-6 pb-1 text-white">
                         <i class="fas fa-shopping-cart"></i> &nbsp; Order Summary
                     </div>
                     <div class="col-12 col-md-4 offset-md-2 text-right">
@@ -22,7 +22,7 @@
                         <div class="col-12 col-lg-6 pb-4">
                             <div class="row">
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-primary">PickUp Details:</span>
+                                    <span class="text-warning">PickUp Details:</span>
                                 </h4>
                             </div>
                             <div class="row my-1">
@@ -108,12 +108,12 @@
                                     }
                                 </div>
                             </div>
-                            <div class="row my-1">
+                           @*  <div class="row my-1">
                                 <div class="col-3">Email</div>
                                 <div class="col-9">
                                         <input asp-for="OrderHeader.ApplicationUser.Email" readonly type="text" class="form-control"/>
                                 </div>
-                            </div>
+                            </div> *@
                             <div class="row my-1">
                                 <div class="col-3">Order Date</div>
                                 <div class="col-9">
@@ -195,12 +195,10 @@
                             }
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
-                            <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="text-primary">Order Summary</span>
-                            </h4>
+                            
                             <label class="btn btn-outline-primary form-control my-2">Order Status - @Model.OrderHeader.OrderStatus</label>
 
-                            <ul class="list-group mb-3">
+                            <ul class="list-group mb-3 mt-3">
                                 @foreach (var item in Model.OrderDetail)
                                 {
                                     <li class="list-group-item d-flex justify-content-between p-2">
@@ -292,4 +290,3 @@
         }
     </script>
 }
-```

@@ -1,7 +1,7 @@
-﻿@model Product
+﻿@model OrderDetail
 @using C_C_Proj_WebStore.Utility
 <form method="post">
-    <input asp-for="Id" hidden />
+    <input asp-for="OrderHeaderId" hidden />
     <br />
     <div class="container">
         <div class="card">
@@ -23,7 +23,7 @@
                         <h4 class="d-flex justify-content-between align-items-center mb-3">
                             <span class="text-primary">Product Details</span>
                         </h4>
-                        <label class="btn btn-outline-primary form-control my-2">Order Status - @Model.StockStatus</label>
+                        <label class="btn btn-outline-primary form-control my-2">Order Status - @Model.Product.StockStatus</label>
 
                         <ul class="list-group mb-3">
 
@@ -33,9 +33,9 @@
                                         <div class="row p-2">
                                             <div class="col-12 p-1">
                                                 <div class="card border-0 shadow border-top border-5 rounded">
-                                                    @if (Model.ProductImages != null && Model.ProductImages.Count() > 0)
+                                                    @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count() > 0)
                                                     {
-                                                        <img src="@Model.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
+                                                        <img src="@Model.Product.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
                                                     }
                                                     else
                                                     {
@@ -44,13 +44,13 @@
                                                     @*  <img src="@item.ImageUrl" class="card-img-top rounded"/>  *@
                                                     <div class="card-body pb-0">
                                                         <div class="pl-1">
-                                                            <p class="card-title h5 text-white text-opacity-75 text-uppercase text-center"> @Model.ShoeModel </p>
-                                                            <p class="card-title text-warning text-center">by <b>@Model.Brand</b></p>
-                                                            <p class="card-title text-white text-center">Age group : <b>@Model.AgeGroup</b></p>
-                                                            <p class="card-title text-white text-center">Gender : <b>@Model.Gender</b></p>
+                                                            <p class="card-title h5 text-white text-opacity-75 text-uppercase text-center"> @Model.Product.ShoeModel </p>
+                                                            <p class="card-title text-warning text-center">by <b>@Model.Product.Brand</b></p>
+                                                            <p class="card-title text-white text-center">Age group : <b>@Model.Product.AgeGroup</b></p>
+                                                            <p class="card-title text-white text-center">Gender : <b>@Model.Product.Gender</b></p>
 
-                                                            <h3 class="card-title text-white text-center">Stock Status : <b>@Model.StockStatus</b></h3>
-                                                            <h3 class="card-title text-white text-center">Stock Count : <b>@Model.StockCount</b></h3>
+                                                            <h3 class="card-title text-white text-center">Stock Status : <b>@Model.Product.StockStatus</b></h3>
+                                                            <h3 class="card-title text-white text-center">Stock Count : <b>@Model.Product.StockCount</b></h3>
 
                                                         </div>
 
@@ -68,7 +68,7 @@
                                               id="inputGroup-sizing-default">
                                             Count
                                         </span>
-                                        <input asp-for="@Model.StockCount" type="number" value="1" class="form-control text-end"
+                                        <input asp-for="@Model.Count" type="number" value="1" class="form-control text-end"
                                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                                     </div>
                                 </div>

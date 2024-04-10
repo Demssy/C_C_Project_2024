@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace C_C_Proj_WebStore.Areas.Customer.Controllers
 {
@@ -14,6 +15,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
         public CartController(IUnitOfWork unitOfWork)
@@ -50,7 +52,9 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 ShoppingCartVM = new ShoppingCartVM()
                 {
                     ShoppingCartList = _unitOfWork.ShoppingCard.GetAll(u => u.ApplicationUserId == claim, includeProperties: "Product"),
-                    OrderHeader = new OrderHeader()
+                    OrderHeader = new OrderHeader(),
+                    UserCreditCard = _unitOfWork.UserCreditCard.Get(u => u.ApplicationUserId == claim) ?? new UserCreditCard()
+
                 };
 
                 ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim);
@@ -83,7 +87,8 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 ShoppingCartVM = new ShoppingCartVM()
                 {
                     ShoppingCartList = new List<ShoppingCard>(),
-                    OrderHeader = new OrderHeader()
+                    OrderHeader = new OrderHeader(),
+                    UserCreditCard = _unitOfWork.UserCreditCard.Get(u => u.ApplicationUserId == claim) ?? new UserCreditCard()
                 };
                 ShoppingCartVM.ShoppingCartList.Append(Card);
                 ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim);
@@ -110,6 +115,23 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
             ShoppingCartVM.OrderHeader.ApplicationUserId = claim;
 
             ApplicationUser applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == claim);
+            UserCreditCard userCreditCardFromDb = _unitOfWork.UserCreditCard.Get(u => u.ApplicationUserId == claim);
+            if (userCreditCardFromDb == null)
+            {
+                ShoppingCartVM.UserCreditCard.key = new byte[16];
+                ShoppingCartVM.UserCreditCard.iv = new byte[16];
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(ShoppingCartVM.UserCreditCard.key);
+                    rng.GetBytes(ShoppingCartVM.UserCreditCard.iv);
+                }
+                ShoppingCartVM.UserCreditCard.ApplicationUserId = applicationUser.Id;
+                ShoppingCartVM.UserCreditCard.EncryptedCardNumber = Encrypt(plainText: ShoppingCartVM.UserCreditCard.CardNumber, ShoppingCartVM.UserCreditCard.key, ShoppingCartVM.UserCreditCard.iv);
+                ShoppingCartVM.UserCreditCard.EncryptedCVV = Encrypt(ShoppingCartVM.UserCreditCard.CVV, ShoppingCartVM.UserCreditCard.key, ShoppingCartVM.UserCreditCard.iv);
+                _unitOfWork.UserCreditCard.Add(ShoppingCartVM.UserCreditCard);
+                _unitOfWork.Save();
+            }
+
 
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -126,6 +148,7 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
                 ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusApproved;
             }
+
             _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
             _unitOfWork.Save();
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
@@ -147,15 +170,13 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 {
                     PaymentMethodTypes = new List<string>
                     {
-                    "card",
-                    "ApplePay",
+                    "card"
                     },
                     SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
                     CancelUrl = domain + "customer/cart/Index",
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
                 };
-
                 foreach (var item in ShoppingCartVM.ShoppingCartList)
                 {
                     var sessionLineItemOptions = new SessionLineItemOptions
@@ -169,15 +190,13 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                                 Name = item.Product.ShoeModel
                             }
                         },
-                        Quantity = item.Count
+                        Quantity = item.Count,
                     };
                     options.LineItems.Add(sessionLineItemOptions);
-
                 }
                 var service = new SessionService();
                 Session session = service.Create(options);
                 _unitOfWork.OrderHeader.UpdateStripePaymentId(ShoppingCartVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
-
                 _unitOfWork.Save();
                 Response.Headers.Add("Location", session.Url);
                 foreach (var item in ShoppingCartVM.ShoppingCartList)
@@ -193,8 +212,6 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                 }
                 return StatusCode(303);
             }
-
-
             return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
         }
 
@@ -300,6 +317,48 @@ namespace C_C_Proj_WebStore.Areas.Customer.Controllers
                     return shoppingCard.Product.Price100;
                 }
             }
+        }
+
+        public byte[] Encrypt(string plainText, byte[] key, byte[] iv)
+        {
+            byte[] cipheredtext;
+            using (Aes aesAlg = Aes.Create())
+            {
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(key, iv);
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                        cipheredtext = msEncrypt.ToArray();
+                    }
+                }
+            }
+            return cipheredtext;
+        }
+
+
+        public string Decrypt(byte[] cipherText, byte[] key, byte[] iv)
+        {
+            string plaintext = String.Empty;
+            using (Aes aesAlg = Aes.Create())
+            {
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(key, iv);
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            return plaintext;
         }
     }
 }

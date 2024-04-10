@@ -110,27 +110,28 @@ namespace C_C_Proj_WebStore.Areas.Admin.Controllers
         public IActionResult OrderProduct()
         {
             var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
-            var orderDetail = _unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
+            var orderDetail = _unitOfWork.OrderDetail.Get(o => o.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
             
-            Product product = orderDetail.First().Product;
-            product.ProductImages = _unitOfWork.ProductImage.GetAll(u => u.ProductId == product.Id).ToList();
-            return View(product);
+           
+            return View(orderDetail);
         }
 
         [HttpPost]
         [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
-        public IActionResult UpdateProductStock(Product product)
+        public IActionResult UpdateProductStock(OrderDetail orderDetail)
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.ApplicationUserId == userId);
+            //var claimsIdentity = (ClaimsIdentity)User.Identity;
+            //var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == orderDetail.OrderHeaderId);
+            ApplicationUser userFromDb = _unitOfWork.ApplicationUser.Get(u => u.Id == orderHeader.ApplicationUserId);
+            
            
             OrderVM.OrderHeader = orderHeader;
             OrderVM.OrderDetail = _unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == orderHeader.Id, includeProperties: "Product");
-            Product productFromDb = _unitOfWork.Product.Get(u => u.Id == product.Id, includeProperties: "Category");
+            Product productFromDb = _unitOfWork.Product.Get(u => u.Id == OrderVM.OrderDetail.First().Product.Id, includeProperties: "Category");
             productFromDb.StockStatus = SD.AvailableInStock;
             orderHeader.OrderStatus = SD.AvailableInStock;
-            productFromDb.StockCount += product.StockCount;
+            productFromDb.StockCount += orderDetail.Count;
             _unitOfWork.Product.Update(productFromDb);
             _unitOfWork.OrderHeader.Update(orderHeader);
             _unitOfWork.Save();

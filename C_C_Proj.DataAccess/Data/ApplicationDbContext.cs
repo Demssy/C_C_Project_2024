@@ -22,6 +22,8 @@ namespace C_C_Proj_WebStore.DataAccess.Data
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<UserCreditCard> UserCreditCards { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
