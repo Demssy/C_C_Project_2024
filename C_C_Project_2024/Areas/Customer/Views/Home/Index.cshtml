@@ -8,47 +8,50 @@
     @section Scripts {
         <script language="javascript">
             const setListeners = () => {
-                $('input[type="checkbox"],#inputPrice,#searchSort,#inputCategory,#inputGender').on('change', function () {
+                $('input[type="checkbox"], #inputPrice, #searchSort, #inputCategory, #inputGender').on('change', sendR);
+                $('#buttonID').click(sendR);
+            };
 
-                    var price = parseInt($('#inputPrice').val());
-                    var sort = parseInt($('#searchSort').val());
-                    var category = $('#inputCategory').val();
-                    var gender = $('#inputGender').val();
+            // Handle form submission
+            const sendR = () => {
 
+                const price = parseInt($('#inputPrice').val());
+                const sort = parseInt($('#searchSort').val());
+                const category = $('#inputCategory').val();
+                const gender = $('#inputGender').val();
+                const srch = $('#searchField').val();
 
-                    var brandFilters = [];
-                    $('input[name="brand"]:checked').each(function () {
-                        brandFilters.push($(this).val());
-                    });
+                var minPrice = $('#minPriceRange').val();
+                var maxPrice = $('#maxPriceRange').val();
 
-                    var sizeFilters = [];
-                    $('input[name="size"]:checked').each(function () {
-                        sizeFilters.push(parseFloat($(this).val()));
-                    });
+                const brandFilters = $('input[name="brand"]:checked').map((_, el) => $(el).val()).get();
+                const sizeFilters = $('input[name="size"]:checked').map((_, el) => parseFloat($(el).val())).get();
+                const colorFilters = $('input[name="color"]:checked').map((_, el) => $(el).val()).get();
 
-                    var colorFilters = [];
-                    $('input[name="color"]:checked').each(function () {
-                        colorFilters.push($(this).val());
-                    });
-
-
-                    $.ajax({
-                        url: '@Url.Action("GetFilteredProducts", "Home")',
-                        type: 'POST',
-                        dataType: 'html',
-                        data: { brands: brandFilters, sizes: sizeFilters, price: price, color: colorFilters, category: category, gender: gender, sort: sort },
-                        success: function (result) {
-
-                            $('#items_root').html(result);
-                        },
-                        error: function (xhr, status, error) {
-                            console.error(error);
-                        }
-                    });
+                $.ajax({
+                    url: '@Url.Action("GetFilteredProducts", "Home")',
+                    type: 'POST',
+                    dataType: 'html',
+                    data: {
+                        brands: brandFilters,
+                        sizes: sizeFilters,
+                        price: price,
+                        color: colorFilters,
+                        category: category,
+                        gender: gender,
+                        sort: sort,
+                        s: srch,
+                        minPrice: minPrice,
+                        maxPrice: maxPrice
+                    },
+                    success: function (result) {
+                        $('#items_root').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
                 });
-            }
-
-
+            };
 
             setListeners();
 
@@ -70,64 +73,7 @@
                 updateMinPriceLabel(document.getElementById('minPriceRange').value);
                 updateMaxPriceLabel(document.getElementById('maxPriceRange').value);
             };
-            function sendRangeValues() {
-                var minPrice = $('#minPriceRange').val();
-                var maxPrice = $('#maxPriceRange').val();
 
-                $.ajax({
-                    url: '@Url.Action("RangeSort", "Home")',
-                    data: { minPrice: minPrice, maxPrice: maxPrice },
-                    type: 'POST',
-                    dataType: 'html',
-                    success: function (result) {
-
-                        $('#items_root').html(result);
-                    },
-                    error: function () {
-                        alert('Error loading products.');
-                    }
-                });
-            }
-
-            // Initialize labels with default range values
-            $(document).ready(function () {
-                updateMinPriceLabel($('#minPriceRange').val());
-                updateMaxPriceLabel($('#maxPriceRange').val());
-            });
-            setListeners();
-        </script>
-
-        @* </script>
-    <script>
-    function updateMinPriceLabel(value) {
-    document.getElementById('minPriceLabel').textContent = value;
+    </script>
     }
-
-    function updateMaxPriceLabel(value) {
-    document.getElementById('maxPriceLabel').textContent = value;
-    }
-
-    function sendRangeValues() {
-    var minPrice = $('#minPriceRange').val();
-    var maxPrice = $('#maxPriceRange').val();
-
-    $.ajax({
-    url: '@Url.Action("RangeSort", "YourControllerName")',
-    data: { minPrice: minPrice, maxPrice: maxPrice },
-    type: 'GET',
-    success: function (data) {
-    $('#productListContainer').html(data);
-    },
-    error: function () {
-    alert('Error loading products.');
-    }
-    });
-    }
-
-    // Initialize labels with default range values
-    $(document).ready(function () {
-    updateMinPriceLabel($('#minPriceRange').val());
-    updateMaxPriceLabel($('#maxPriceRange').val());
-    });
-    </script> *@
-    }
+</div>
